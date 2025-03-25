@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Accueil</title>
+</head>
+<body>
+<h2>Bienvenue, <span th:text="${#authentication.name}"></span> !</h2>
+<p>Ceci est la page d'accueil.</p>
+<a th:href="@{/logout}">Se déconnecter</a>
+</body>
+</html>

@@ -1,7 +1,7 @@
 -- Création de la table des transactions qui contient les détails des transferts effectués entre les utilisateurs
 CREATE TABLE transactions
 (
-    id            BIGINT NOT NULL,              -- Identifiant unique pour chaque transaction
+    id            BIGINT NOT NULL AUTO_INCREMENT,              -- Identifiant unique pour chaque transaction
     sender_id     BIGINT NOT NULL,              -- Identifiant de l'utilisateur envoyant l'argent
     receiver_id   BIGINT NOT NULL,              -- Identifiant de l'utilisateur recevant l'argent
     amount DOUBLE NOT NULL,                     -- Montant de la transaction
@@ -12,7 +12,7 @@ CREATE TABLE transactions
 -- Création de la table des utilisateurs qui contient les informations d'identité et de connexion
 CREATE TABLE users
 (
-    id       BIGINT NOT NULL,            -- Identifiant unique pour chaque utilisateur
+    id       BIGINT NOT NULL AUTO_INCREMENT,            -- Identifiant unique pour chaque utilisateur
     username VARCHAR(255) NULL,          -- Nom d'utilisateur (facultatif)
     password VARCHAR(255) NULL,          -- Mot de passe de l'utilisateur (facultatif)
     email    VARCHAR(255) NULL,          -- Adresse email de l'utilisateur (facultatif)
