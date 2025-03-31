@@ -1,5 +1,6 @@
 package fr.paymybuddy.application.service;
 
+import fr.paymybuddy.application.dto.TransactionDTO;
 import fr.paymybuddy.application.model.Transaction;
 import fr.paymybuddy.application.model.User;
 import fr.paymybuddy.application.repository.TransactionRepository;
@@ -15,17 +16,8 @@ import java.util.List;
 public class TransactionService {
 
     private final TransactionRepository transactionRepository;
+    private final UserService userService;
 
-    /**
-     * Sauvegarde une nouvelle transaction dans la base de données.
-     *
-     * @param transaction l'objet transaction à sauvegarder
-     * @return la transaction sauvegardée
-     */
-    public Transaction saveTransaction(Transaction transaction) {
-        // Logique supplémentaire éventuelle avant enregistrement
-        return transactionRepository.save(transaction);
-    }
 
     /**
      * Récupère toutes les transactions envoyées par un utilisateur spécifique.
@@ -33,29 +25,20 @@ public class TransactionService {
      * @param senderId l'identifiant de l'utilisateur expéditeur
      * @return une liste de transactions envoyées
      */
-    public List<Transaction> findTransactionsBySender(Long senderId) {
-        return transactionRepository.findBySender_Id(senderId);
+    public List<TransactionDTO> findTransactionsBySender(Long senderId) {
+        // Récupérer la liste des transactions
+        List<Transaction> transactions = transactionRepository.findBySender_Id(senderId);
+
+        // Transformer chaque transaction en DTO
+        return transactions.stream()
+                .map(transaction -> new TransactionDTO(
+                        transaction.getReceiver().getUsername(),
+                        transaction.getDescription(),
+                        transaction.getAmount()
+                ))
+                .toList(); // Retourner une liste de DTOs
     }
 
-    /**
-     * Récupère toutes les transactions reçues par un utilisateur spécifique.
-     *
-     * @param receiverId l'identifiant de l'utilisateur destinataire
-     * @return une liste de transactions reçues
-     */
-    public List<Transaction> findTransactionsByReceiver(Long receiverId) {
-        return transactionRepository.findByReceiver_Id(receiverId);
-    }
-
-    /**
-     * Récupère toutes les transactions où un utilisateur est impliqué (comme expéditeur ou destinataire).
-     *
-     * @param userId l'identifiant de l'utilisateur concerné
-     * @return une liste de transactions correspondant
-     */
-    public List<Transaction> findTransactionsByUser(Long userId) {
-        return transactionRepository.findBySender_IdOrReceiver_Id(userId, userId);
-    }
 
     /**
      * Valide et initialise une transaction avant sauvegarde.
@@ -66,22 +49,27 @@ public class TransactionService {
      * @param description la description facultative
      * @return la transaction sauvegardée
      */
-    public Transaction createTransaction(User sender, User receiver, double amount, String description) {
+    public Boolean createTransaction(User sender, Long receiver, double amount, String description) {
         // Validation business logic de base
         if (sender == null || receiver == null) {
+            throw new IllegalArgumentException("La transaction nécessite un expéditeur et un destinataire.");
+        }
+        User userDestinataire = userService.getById(receiver);
+        User userConecte = userService.getById(sender.getId());
+        if (userDestinataire == null || userConecte == null) {
             throw new IllegalArgumentException("La transaction nécessite un expéditeur et un destinataire.");
         }
         if (amount <= 0) {
             throw new IllegalArgumentException("Le montant de la transaction doit être supérieur à zéro.");
         }
-
         Transaction transaction = new Transaction();
-        transaction.setSender(sender);
-        transaction.setReceiver(receiver);
+        transaction.setSender(userConecte);
+        transaction.setReceiver(userDestinataire);
         transaction.setAmount(amount);
         transaction.setDescription(description);
 
         // Appeler la méthode de sauvegarde
-        return saveTransaction(transaction);
+        transactionRepository.save(transaction);
+        return true;
     }
 }

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un Contact</title>
+    <link rel="stylesheet" href="/css/style.css"> <!-- Optionnel : Ajout de styles personnalisés -->
+</head>
+<body>
+<div class="container">
+    <h1>Ajouter un Contact</h1>
+
+    <!-- Affichage du message de bienvenue pour l'utilisateur -->
+    <p th:text="'Bonjour ' + ${username} + ','">Bonjour, utilisateur</p>
+
+    <!-- Formulaire d'ajout de contact -->
+    <form action="/api/user/contact" method="post">
+        <label for="email">Chercher une relation :</label>
+        <input type="email" id="email" name="email" placeholder="Saisir une adresse mail" required>
+        <button type="submit">Ajouter</button>
+    </form>
+</div>
+</body>
+</html>

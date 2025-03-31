@@ -24,7 +24,7 @@ public class User implements UserDetails {
      * Généré automatiquement.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Changement ici
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 

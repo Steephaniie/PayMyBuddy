@@ -1,8 +1,11 @@
 package fr.paymybuddy.application.service;
 
+import fr.paymybuddy.application.dto.UserDTO;
 import fr.paymybuddy.application.model.User;
 import fr.paymybuddy.application.repository.UserRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +18,7 @@ import java.util.Optional;
  * et implémente la logique métier associée.
  */
 @Service
+@AllArgsConstructor
 public class UserService {
 
     /**
@@ -22,15 +26,6 @@ public class UserService {
      */
     private final UserRepository userRepository;
 
-    /**
-     * Constructeur pour l'injection du UserRepository.
-     *
-     * @param userRepository Le dépôt des utilisateurs.
-     */
-    @Autowired
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     /**
      * Recherche un utilisateur par son adresse e-mail.
@@ -38,19 +33,10 @@ public class UserService {
      * @param email L'adresse e-mail de l'utilisateur.
      * @return Un objet Optional contenant l'utilisateur si trouvé, ou vide sinon.
      */
-    public Optional<User> findUserByEmail(String email) {
+    public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
-    /**
-     * Recherche un utilisateur par son nom d'utilisateur.
-     *
-     * @param username Le nom d'utilisateur.
-     * @return Un objet Optional contenant l'utilisateur si trouvé, ou vide sinon.
-     */
-    public Optional<User> findUserByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
 
     /**
      * Enregistre ou met à jour un utilisateur dans le dépôt.
@@ -62,34 +48,6 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    /**
-     * Supprime un utilisateur par son identifiant.
-     *
-     * @param userId L'identifiant de l'utilisateur à supprimer.
-     */
-    public void deleteUserById(Long userId) {
-        userRepository.deleteById(userId);
-    }
-
-
-    /**
-     * Recherche un utilisateur par son identifiant.
-     *
-     * @param id L'identifiant de l'utilisateur.
-     * @return Un objet Optional contenant l'utilisateur si trouvé, ou vide sinon.
-     */
-    public Optional<User> findUserById(Long id) {
-        return userRepository.findById(id);
-    }
-
-    /**
-     * Récupère la liste de tous les utilisateurs du dépôt.
-     *
-     * @return Une liste contenant tous les utilisateurs.
-     */
-    public List<User> findAllUsers() {
-        return userRepository.findAll();
-    }
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -106,4 +64,56 @@ public class UserService {
     }
 
 
+    public User majUser(User user, String username, String password, String email) {
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(password)); // Hachage du mot de passe
+        return userRepository.save(user);
+    }
+
+    public void addContact(User currentUser, User targetUser) {
+        List<User> connections = currentUser.getConnections();
+
+        // Évitez les doublons
+        if (!connections.contains(targetUser)) {
+            connections.add(targetUser);
+            userRepository.save(currentUser); // Met à jour les connexions de l'utilisateur
+        }
+    }
+
+    public List<UserDTO> getContacts(User user) {
+        // le user connecté n'est pas entièrement chargée - pas de connexion
+       User currentUser = userRepository.getById(user.getId());
+       List<User> connections = currentUser.getConnections();
+        // Transformation des entités User en UserDTO
+        List<UserDTO> contacts = connections.stream()
+                .map(connection -> new UserDTO(connection.getUsername(), connection.getEmail(), connection.getId()))
+                .toList();
+        return contacts;
+        // Retourner la réponse avec les contacts au format JSON
+    }
+
+    public UserDTO addContacts(User user, String email) {
+        // le user connecté n'est pas entièrement chargée - pas de connexion
+        User currentUser = userRepository.getById(user.getId());
+        // Vérifiez si l'email cible correspond à un utilisateur existant
+        User nouveauContact = findUserByEmail(email);
+        if (nouveauContact == null) {
+            // Si l'utilisateur cible n'existe pas, retournez une erreur 404
+            return null;
+        }
+        List<User> connections = currentUser.getConnections();
+        // Évitez les doublons
+        if (!connections.contains(nouveauContact)) {
+            connections.add(nouveauContact);
+            userRepository.save(currentUser); // Met à jour les connexions de l'utilisateur
+        }
+
+        // Créez un UserDTO avec le user crée
+        return new UserDTO(nouveauContact.getUsername(), nouveauContact.getEmail(),nouveauContact.getId());
+    }
+
+    public User getById(Long receiver) {
+        return userRepository.getById(receiver);
+    }
 }

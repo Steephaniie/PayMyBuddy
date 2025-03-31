@@ -16,7 +16,7 @@ public class Transaction {
      * Identifiant unique de la transaction.
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 

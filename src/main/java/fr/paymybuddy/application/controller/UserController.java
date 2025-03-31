@@ -1,138 +1,90 @@
 package fr.paymybuddy.application.controller;
 
+import org.springframework.ui.Model;
+
+import fr.paymybuddy.application.dto.UserDTO;
 import fr.paymybuddy.application.model.User;
 import fr.paymybuddy.application.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Contrôleur REST pour gérer les utilisateurs.
  * Permet de créer, lire, mettre à jour et supprimer des utilisateurs via des requêtes HTTP.
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/user")
+@AllArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody User user) {
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        user.setPassword(passwordEncoder.encode(user.getPassword())); // Cryptez le mot de passe
-        userService.saveUser(user);
-        return ResponseEntity.ok("Utilisateur enregistré avec succès !");
+    /**
+     * Récupère les informations de l'utilisateur actuellement authentifié.
+     *
+     * @param user L'utilisateur actuellement authentifié, fourni par Spring Security.
+     * @return Une réponse HTTP contenant un objet UserDTO avec les informations essentielles de l'utilisateur.
+     */
+    @GetMapping("")
+    public ResponseEntity<UserDTO> getUser(@AuthenticationPrincipal User user) {
+        // Créer le DTO à partir de l'utilisateur authentifié
+        UserDTO userDTO = new UserDTO(user.getUsername(), user.getEmail() , user.getId());
+
+        // Renvoyer l'objet au format JSON
+        return ResponseEntity.ok(userDTO);
     }
 
 
     /**
-     * Constructeur pour l'injection du UserService.
+     * Met à jour les informations d'un utilisateur existant.
      *
-     * @param userService Service pour gérer les utilisateurs.
+     * @param userConnecte L'utilisateur actuellement authentifié.
+     * @param username     Le nouveau nom d'utilisateur à attribuer.
+     * @param password     Le nouveau mot de passe à attribuer.
+     * @param email        La nouvelle adresse e-mail à attribuer.
+     * @return Une réponse HTTP contenant l'objet UserDTO mis à jour.
      */
-    @Autowired
-    public UserController(UserService userService) {
-        this.userService = userService;
+    @PutMapping("")
+    public ResponseEntity<UserDTO> updateUser(
+            @AuthenticationPrincipal User userConnecte,
+            @RequestParam String username,
+            @RequestParam String password,
+            @RequestParam String email) {
+        User updatedUser = userService.majUser(userConnecte, username, password, email);
+        UserDTO userDTO = new UserDTO(updatedUser.getUsername(), updatedUser.getEmail(), updatedUser.getId());
+        return ResponseEntity.ok(userDTO);
+
     }
 
-    /**
-     * Endpoint pour récupérer un utilisateur par son identifiant.
-     *
-     * @param userId Identifiant de l'utilisateur.
-     * @return L'utilisateur trouvé ou une réponse 404.
-     */
-    @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable("id") Long userId) {
-        Optional<User> user = userService.findUserById(userId);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
+    @PostMapping("/contact")
+    public ResponseEntity<UserDTO> addContact(
+            @AuthenticationPrincipal User user,
+            @RequestParam String email) {
 
-    /**
-     * Endpoint pour trouver un utilisateur par son email.
-     *
-     * @param email Adresse email de l'utilisateur.
-     * @return L'utilisateur trouvé ou une réponse 404.
-     */
-    @GetMapping("/email/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable("email") String email) {
-        Optional<User> user = userService.findUserByEmail(email);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Endpoint pour trouver un utilisateur par son nom d'utilisateur (username).
-     *
-     * @param username Nom d'utilisateur.
-     * @return L'utilisateur trouvé ou une réponse 404.
-     */
-    @GetMapping("/username/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable("username") String username) {
-        Optional<User> user = userService.findUserByUsername(username);
-        return user.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Endpoint pour créer un nouvel utilisateur.
-     *
-     * @param user Objet utilisateur à créer.
-     * @return L'utilisateur créé avec un statut HTTP 201.
-     */
-    @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User createdUser = userService.saveUser(user);
-        return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
-    }
-
-    /**
-     * Endpoint pour mettre à jour les informations d'un utilisateur.
-     *
-     * @param userId Identifiant de l'utilisateur à mettre à jour.
-     * @param user   Nouvel objet utilisateur.
-     * @return L'utilisateur mis à jour ou 404 si l'utilisateur n'existe pas.
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<User> updateUser(@PathVariable("id") Long userId, @RequestBody User user) {
-        Optional<User> existingUser = userService.findUserById(userId);
-        if (existingUser.isPresent()) {
-            user.setId(userId);
-            User updatedUser = userService.saveUser(user);
-            return ResponseEntity.ok(updatedUser);
-        } else {
+        // Récupération des contacts de l'utilisateur connecté
+        UserDTO usersContacts = userService.addContacts(user, email);
+        if (usersContacts != null)
+            return ResponseEntity.ok(usersContacts);
+        else
             return ResponseEntity.notFound().build();
-        }
+
     }
 
-    /**
-     * Endpoint pour lister tous les utilisateurs.
-     *
-     * @return La liste de tous les utilisateurs.
-     */
-    @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.findAllUsers();
-        return ResponseEntity.ok(users);
+
+    @GetMapping("/contact")
+    public ResponseEntity<List<UserDTO>> getContacts(@AuthenticationPrincipal User user) {
+
+        // Récupération des contacts de l'utilisateur connecté
+        List<UserDTO> usersContacts = userService.getContacts(user);
+
+        return ResponseEntity.ok(usersContacts);
     }
 
-    /**
-     * Endpoint pour supprimer un utilisateur par son identifiant.
-     *
-     * @param userId Identifiant de l'utilisateur.
-     * @return Une réponse 204 (no content) ou 404 si l'utilisateur n'existe pas.
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Long userId) {
-        Optional<User> existingUser = userService.findUserById(userId);
-        if (existingUser.isPresent()) {
-            userService.deleteUserById(userId);
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
+
+
+
 }

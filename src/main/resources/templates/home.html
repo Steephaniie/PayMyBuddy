@@ -7,6 +7,8 @@
 <body>
 <h2>Bienvenue, <span th:text="${#authentication.name}"></span> !</h2>
 <p>Ceci est la page d'accueil.</p>
-<a th:href="@{/logout}">Se déconnecter</a>
+<a th:href="@{/profile}">Profil</a><br>
+<a th:href="@{/addContact}">Ajouter Relation</a><br>
+<a th:href="@{/logout}">Se déconnecter</a><br>
 </body>
 </html>
