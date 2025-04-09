@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Modifier mon profil</title>
+</head>
+<body>
+<h1>Modifier mon profil</h1>
+
+<!-- La section ci-dessous affiche un message de succès si la mise à jour a été effectuée avec succès -->
+<div th:if="${successMessage}" style="color: green;">
+    <!-- Affiche le contenu du message de succès transmis depuis le contrôleur -->
+    <strong th:text="${successMessage}"></strong>
+</div>
+
+<!-- Formulaire de mise à jour des informations du profil de l'utilisateur -->
+<form th:action="@{/profile}" method="post">
+    <div>
+        <!-- Champ pour modifier le nom d'utilisateur -->
+        <label for="username">Nom d'utilisateur:</label>
+        <input type="text" id="username" name="username" placeholder="@username" th:value="${userDTO.username}"
+               required>
+    </div>
+    <div>
+        <!-- Champ pour modifier l'adresse email -->
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" placeholder="nom@domain.com" th:value="${userDTO.email}" required>
+    </div>
+    <div>
+        <!-- Champ pour modifier le mot de passe -->
+        <label for="password">Mot de passe:</label>
+        <input type="password" id="password" name="password" placeholder="mot de passe" required>
+    </div>
+    <div>
+        <!-- Bouton pour soumettre les modifications -->
+        <button type="submit">Modifier</button>
+    </div>
+</form>
+</body>
+</html>

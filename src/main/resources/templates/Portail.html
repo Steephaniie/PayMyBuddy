@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay My Buddy - Portail</title>
+    <style>
+        /* Style global pour le corps de la page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Hauteur de la vue pour occuper toute l'écran */
+            margin: 0;
+        }
+
+        /* Style pour le conteneur principal */
+        .container {
+            background: white;
+            padding: 40px; /* Espacement interne */
+            border-radius: 10px; /* Coins arrondis */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre externe légère */
+            text-align: center; /* Centrage du texte */
+        }
+
+        /* Style pour le titre principal */
+        h1 {
+            margin-bottom: 30px; /* Marge en bas pour espacer les éléments */
+            color: #333;
+        }
+
+        /* Style générique pour les boutons */
+        .btn {
+            display: block; /* Affichage en bloc */
+            width: 200px; /* Largeur fixe pour uniformiser */
+            margin: 10px auto; /* Marge automatique pour centrer */
+            padding: 15px; /* Espacement interne */
+            font-size: 16px; /* Taille de la police */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Suppression du soulignement */
+            color: white; /* Couleur du texte */
+        }
+
+        /* Style spécifique au bouton de connexion */
+        .btn-login {
+            background-color: #4CAF50; /* Couleur verte pour Connexion */
+        }
+
+        /* Style spécifique au bouton d'enregistrement */
+        .btn-register {
+            background-color: #2196F3; /* Couleur bleue pour Enregistrement */
+        }
+
+        /* Effet au survol des boutons */
+        .btn:hover {
+            opacity: 0.9; /* Légère transparence pour effet visuel */
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Bienvenue sur Pay My Buddy</h1>
+    <!-- Message de succès affiché si l'utilisateur est déconnecté -->
+    <div th:if="${param.logout}" class="success">Vous avez été déconnecté avec succès.</div>
+    <!-- Bouton redirigeant vers la page de connexion -->
+    <a href="/login" class="btn btn-login">Se connecter</a>
+    <!-- Bouton redirigeant vers la page d'enregistrement -->
+    <a href="/register" class="btn btn-register">S'enregistrer</a>
+</div>
+</body>
+</html>
+

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Inscription</title>
+    <style>
+        /* Style global pour le corps de la page */
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 400px;
+            margin: 50px auto;
+        }
+
+        /* Des marges pour chaque groupe de champs de formulaire */
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        /* Style des labels */
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        /* Style des champs de saisie */
+        input {
+            width: 100%;
+            padding: 8px;
+        }
+
+        /* Style du bouton principal */
+        button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* Style du bouton lors du survol */
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Style pour les messages d'erreur */
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<!-- Titre de la page -->
+<h2>Inscription</h2>
+
+<!-- Formulaire d'inscription avec action liée à l'URL /register -->
+<form th:action="@{/register}" method="post">
+    <div class="form-group">
+        <!-- Champ pour le nom d'utilisateur -->
+        <label for="username">Nom d'utilisateur :</label>
+        <input type="text" id="username" name="username" required/>
+    </div>
+    <div class="form-group">
+        <!-- Champ pour le mot de passe -->
+        <label for="password">Mot de passe :</label>
+        <input type="password" id="password" name="password" required/>
+    </div>
+    <div class="form-group">
+        <!-- Champ pour l'adresse email -->
+        <label for="email">Email :</label>
+        <input type="text" id="email" name="email" required/>
+    </div>
+    <!-- Bouton pour soumettre le formulaire -->
+    <button type="submit">S'inscrire</button>
+</form>
+
+<!-- Zone qui affiche un message d'erreur si une variable "error" existe -->
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<!-- Lien pour rediriger les utilisateurs déjà inscrits vers la page de connexion -->
+<p>Déjà inscrit ? <a th:href="@{/login}">Connectez-vous ici</a></p>
+</body>
+</html>

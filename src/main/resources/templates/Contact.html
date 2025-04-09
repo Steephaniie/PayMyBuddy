@@ -1,0 +1,28 @@
+<!DOCTYPE html> <!-- Déclaration du type de document (HTML5) -->
+<html xmlns:th="http://www.thymeleaf.org" lang="fr"> <!-- Définition de l'espace de noms Thymeleaf et la langue -->
+<head>
+    <meta charset="UTF-8"> <!-- Définition de l'encodage des caractères -->
+    <title>Ajouter un Contact</title> <!-- Titre de la page -->
+    <link rel="stylesheet" href="/css/style.css"> <!-- Chemin vers une feuille de styles personnalisée -->
+</head>
+<body>
+<div class="container"> <!-- Contenant principal de la page -->
+    <h1>Ajouter un Contact</h1> <!-- Titre principal de la page -->
+
+    <!-- Affichage du message de bienvenue pour l'utilisateur connecté -->
+    <p th:text="'Bonjour ' + ${username} + ','">Bonjour, utilisateur</p>
+
+    <!-- 
+    Formulaire permettant d'ajouter un contact.
+    L'utilisateur doit saisir une adresse e-mail valide pour rechercher et ajouter une relation.
+    Le formulaire est soumis via une requête POST à l'URL "/api/user/contact".
+    -->
+    <form action="/api/user/contact" method="post">
+        <label for="email">Chercher une relation :</label> <!-- Champ de saisie pour l'adresse e-mail -->
+        <input type="email" id="email" name="email" placeholder="Saisir une adresse mail" required>
+        <!-- Champ de saisie -->
+        <button type="submit">Ajouter</button> <!-- Bouton pour valider le formulaire -->
+    </form>
+</div>
+</body>
+</html>
