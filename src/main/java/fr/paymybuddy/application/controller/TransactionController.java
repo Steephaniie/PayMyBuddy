@@ -1,16 +1,14 @@
 package fr.paymybuddy.application.controller;
 
 import fr.paymybuddy.application.dto.TransactionDTO;
-import fr.paymybuddy.application.model.Transaction;
 import fr.paymybuddy.application.model.User;
 import fr.paymybuddy.application.service.TransactionService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -74,6 +72,8 @@ public class TransactionController {
         logger.info("Récupération réussie de {} transactions pour l'utilisateur : {}", transactions.size(), userConnecte.getUsername());
         return ResponseEntity.ok(transactions);
     }
+
+
 
 
 }

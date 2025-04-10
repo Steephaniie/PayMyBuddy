@@ -9,9 +9,12 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.ui.Model;
+
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -72,7 +75,7 @@ class UserProfileControllerTest {
 
         // Appel de la méthode et vérification des résultats
         mockMvc.perform(get("/profile")
-                        .principal(() -> mockUser.getUsername()))
+                        .principal(mockUser::getUsername))
                 .andExpect(status().isOk())
                 .andExpect(view().name("Profil"))
                 .andExpect(model().attributeExists("userDTO"));
@@ -158,8 +161,26 @@ class UserProfileControllerTest {
           // Simulation de l'appel à la méthode GET /addContact
         mockMvc.perform(get("/addContact")
                         .flashAttr("userConnecte", mockUser)
-                .principal(() -> mockUser.getUsername())) // Simulation de l'utilisateur connecté
+                .principal(mockUser::getUsername)) // Simulation de l'utilisateur connecté
                 .andExpect(status().isOk()) // Vérifie que le statut de la réponse est 200 (OK)
                 .andExpect(view().name("Contact")); // Vérifie que la vue retournée est "addContact"
+    }
+
+    @Test
+    void testAddContactSuccess() throws Exception {
+
+        String contactUsername = "updatedUser";
+        String contactPassword = "updatedPassword";
+        String contactEmail = "updated@example.com";
+
+        UserDTO userDto = new UserDTO(contactUsername,contactEmail,2L);
+        when(userService.addContactByEmail(authenticatedUser, contactEmail))
+                .thenReturn(userDto);
+
+        // Appeler la méthode testée
+        ResponseEntity<UserDTO> a = userProfileController.addContact(authenticatedUser, contactEmail);
+        assert a.getStatusCode().is2xxSuccessful();
+        assert Objects.requireNonNull(a.getBody()).getUsername().equals(contactUsername);
+        verify(userService, times(1)).addContactByEmail(authenticatedUser, contactEmail);
     }
 }

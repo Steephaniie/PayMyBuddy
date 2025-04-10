@@ -49,7 +49,7 @@ public class SecurityConfiguration {
                 // Configure la gestion des formulaires de connexion
                 .formLogin(form -> form
                         .loginPage("/login") // Page de login personnalisée
-                        .defaultSuccessUrl("/home", true) // Redirection après succès
+                        .defaultSuccessUrl("/transferer", true) // Redirection après succès
                         .permitAll()
                 )
                 // Configure la déconnexion

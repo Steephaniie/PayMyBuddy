@@ -40,23 +40,6 @@ class HomeControllerTest {
         authenticatedUser.setUsername("testUser");
         authenticatedUser.setEmail("test@example.com");
     }
-    /**
-     * Test pour la méthode home().
-     * Ce test effectue une requête GET sur "/home" et vérifie :
-     * <ul>
-     *     <li>Le statut HTTP est "200 OK".</li>
-     *     <li>La vue retournée est "home".</li>
-     * </ul>
-     */
-    @Test
-    void testHome() throws Exception {
-        // Étape 1 : Exécution de la requête GET sur "/home"
-        ResultActions result = mockMvc.perform(get("/home"));
-
-        // Étape 2 : Validation du statut HTTP (attendu : 200 OK) et du nom de la vue (attendu : "home")
-        result.andExpect(status().isOk()); // Vérifie que le statut HTTP est 200
-
-    }
 
     /**
      * Test pour la méthode login().

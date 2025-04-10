@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transactions de l'utilisateur</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
+</head>
+<body>
+<table style="width: 1024px;margin-left: 100px;">
+    <tr>
+        <td style="width: 500px;" >
+            <h3> Pay My Buddy</h3>
+        </td>
+        <td>
+            <a th:href="@{/transferer}">Transférer</a><br>
+        </td>
+        <td>
+            <a th:href="@{/profil}">Profil</a><br>
+        </td>
+        <td>
+            <a th:href="@{/addContact}">Ajouter Relation</a><br>
+        </td>
+        <td>
+            <a th:href="@{/logout}">Se déconnecter</a><br>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <br><br><br><!-- Formulaire pour créer une nouvelle transaction -->
+            <form th:action="@{/payer}" method="post">
+                <!-- Liste déroulante des contacts -->
+                <!--    <label for="id_contact">Sélectionner un contact :</label>-->
+                <select id="id_contact" name="id_contact">
+                    <option value="" disabled>Selectionner une relation</option>
+                    <!-- Boucle pour afficher les contacts -->
+                    <option th:each="contact : ${contacts}" th:value="${contact.id}" th:text="${contact.username}">
+                        Selectionner une relation
+                    </option>
+                </select>
+
+                <!-- Champ pour la description -->
+                <!--    <label for="description">Description :</label>-->
+                <input id="description" name="description" type="text" placeholder="Description" required>
+
+                <!-- Champ pour le montant -->
+                <!--    <label for="montant">Montant (€) :</label>-->
+                <input id="montant" name="montant" type="number" step="1" placeholder="0 €" required>
+
+                <!-- Bouton pour soumettre le formulaire -->
+                <button type="submit">Payer</button>
+            </form>
+            <br><br><br><br>
+            <h4>Mes Transactions</h4>
+
+            <table>
+                <thead>
+                <tr>
+                    <th>Relations</th>
+                    <th>Description</th>
+                    <th style="text-align: right;">Montant</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Boucle pour afficher les transactions depuis le modèle -->
+                <tr th:each="transaction : ${transactions}">
+                    <td th:text="${transaction.receiverName}">Relation</td>
+                    <td th:text="${transaction.description}">Description</td>
+                    <td th:text="${#numbers.formatDecimal(transaction.amount, 0, 0)} + ' €'" style="text-align: right;">Montant</td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

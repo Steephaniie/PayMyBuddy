@@ -15,24 +15,6 @@ public class HomeController {
     private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
 
     /**
-     * Gère la route GET pour la page d'accueil.
-     *
-     * @return le nom de la vue correspondante pour l'accueil (Home.html).
-     */
-    @GetMapping("/home")
-    public String home() {
-        logger.debug("Traitement de la requête GET pour la route /home.");
-        try {
-            // Retourne la vue d'accueil
-            logger.info("Accès réussi à la page d'accueil.");
-            return "Home";
-        } catch (Exception e) {
-            logger.error("Erreur lors du chargement de la page d'accueil.", e);
-            throw e;
-        }
-    }
-
-    /**
      * Gère la route GET pour la page de connexion.
      *
      * @return le nom de la vue correspondante pour la connexion (Login.html).

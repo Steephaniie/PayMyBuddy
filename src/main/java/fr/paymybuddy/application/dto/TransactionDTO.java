@@ -35,10 +35,6 @@ public class TransactionDTO {
      */
     private double amount;
 
-    public void logTransactionInfo() {
-        logger.info("TransactionDTO créé avec le nom du destinataire : {}, le montant : {}, la description : {}",
-                receiverName, amount, description);
-    }
 
     @Override
     public boolean equals(Object o) {

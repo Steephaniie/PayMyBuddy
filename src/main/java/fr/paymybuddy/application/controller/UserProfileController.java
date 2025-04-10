@@ -25,7 +25,7 @@ public class UserProfileController {
     /**
      * Affiche le formulaire de profil de l'utilisateur connecté.
      */
-    @GetMapping("/profile")
+    @GetMapping("/profil")
     public String getUserProfile(@AuthenticationPrincipal User userConnecte, Model model) {
         logger.debug("Début de la méthode getUserProfile pour l'utilisateur : {}", userConnecte.getUsername());
 
@@ -40,7 +40,7 @@ public class UserProfileController {
     /**
      * Met à jour le profil de l'utilisateur connecté.
      */
-    @PostMapping("/profile")
+    @PostMapping("/profil")
     public String updateUserProfile(
             @AuthenticationPrincipal User userConnecte,
             String username,
