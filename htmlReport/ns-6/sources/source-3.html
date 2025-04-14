@@ -1,0 +1,296 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">fr.paymybuddy.application.service</a>
+</div>
+
+<h1>Coverage Summary for Class: UserService (fr.paymybuddy.application.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    87,5%
+  </span>
+  <span class="absValue">
+    (7/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    95,6%
+  </span>
+  <span class="absValue">
+    (43/45)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package fr.paymybuddy.application.service;
+&nbsp;
+&nbsp;import fr.paymybuddy.application.dto.UserDTO;
+&nbsp;import fr.paymybuddy.application.model.User;
+&nbsp;import fr.paymybuddy.application.repository.UserRepository;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+&nbsp;import org.springframework.security.crypto.password.PasswordEncoder;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;/**
+&nbsp; * Service pour la gestion des utilisateurs.
+&nbsp; * Fournit des méthodes pour interagir avec le dépôt des utilisateurs
+&nbsp; * et implémente la logique métier associée.
+&nbsp; */
+&nbsp;@Service
+&nbsp;@AllArgsConstructor
+&nbsp;public class UserService {
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(UserService.class);</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Le dépôt pour les entités utilisateurs.
+&nbsp;     */
+&nbsp;    private final UserRepository userRepository;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Recherche un utilisateur par son adresse e-mail.
+&nbsp;     *
+&nbsp;     * @param email L&#39;adresse e-mail de l&#39;utilisateur.
+&nbsp;     * @return Un objet Optional contenant l&#39;utilisateur si trouvé, ou vide sinon.
+&nbsp;     */
+&nbsp;    public User findUserByEmail(String email) {
+<b class="fc">&nbsp;        return userRepository.findByEmail(email);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Enregistre ou met à jour un utilisateur dans le dépôt.
+&nbsp;     *
+&nbsp;     * @param user L&#39;utilisateur à enregistrer.
+&nbsp;     * @return L&#39;utilisateur enregistré ou mis à jour.
+&nbsp;     */
+&nbsp;    public User saveUser(User user) {
+<b class="fc">&nbsp;        return userRepository.save(user);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gestionnaire pour encoder les mots de passe des utilisateurs
+&nbsp;     * (hashage sécurisé avant enregistrement).
+&nbsp;     */
+&nbsp;    @Autowired
+&nbsp;    private PasswordEncoder passwordEncoder;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Enregistre un nouvel utilisateur après validation.
+&nbsp;     * Vérifie si le nom d&#39;utilisateur est disponible, hache le mot de passe, et le sauvegarde.
+&nbsp;     *
+&nbsp;     * @param username Le nom d&#39;utilisateur à enregistrer.
+&nbsp;     * @param password Le mot de passe de l&#39;utilisateur.
+&nbsp;     * @param email    L&#39;adresse e-mail de l&#39;utilisateur.
+&nbsp;     * @throws IllegalArgumentException si le nom d&#39;utilisateur est déjà pris.
+&nbsp;     */
+&nbsp;    public void registerUser(String username, String password, String email) {
+<b class="fc">&nbsp;        logger.info(&quot;Tentative d&#39;enregistrement d&#39;un nouvel utilisateur&quot;);</b>
+<b class="fc">&nbsp;        logger.debug(&quot;Vérification si le nom d&#39;utilisateur &#39;{}&#39; est déjà pris&quot;, username);</b>
+<b class="fc">&nbsp;        email = email.trim();</b>
+<b class="fc">&nbsp;        if (userRepository.getByEmail(email).isPresent()) {</b>
+<b class="fc">&nbsp;            logger.error(&quot;Échec de l&#39;enregistrement : cet email &#39;{}&#39; est déjà utilisé&quot;, username);</b>
+<b class="fc">&nbsp;            throw new IllegalArgumentException(&quot;Cet email est déjà pris.&quot;);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        User user = new User();</b>
+<b class="fc">&nbsp;        user.setUsername(username);</b>
+<b class="fc">&nbsp;        user.setEmail(email);</b>
+&nbsp;        //TODO par defaut les nouveaux demarrent avec 100 €
+<b class="fc">&nbsp;        user.setSolde(new BigDecimal(&quot;100&quot;));</b>
+<b class="fc">&nbsp;        user.setPassword(passwordEncoder.encode(password)); // Hachage du mot de passe</b>
+<b class="fc">&nbsp;        userRepository.save(user);</b>
+<b class="fc">&nbsp;        logger.info(&quot;Utilisateur &#39;{}&#39; enregistré avec succès&quot;, username);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Met à jour les informations d&#39;un utilisateur existant.
+&nbsp;     * Modifie le nom d&#39;utilisateur, l&#39;email, et hache le mot de passe avant de sauvegarder.
+&nbsp;     *
+&nbsp;     * @param user     L&#39;utilisateur à mettre à jour.
+&nbsp;     * @param username Le nouveau nom d&#39;utilisateur.
+&nbsp;     * @param password Le nouveau mot de passe.
+&nbsp;     * @param email    Le nouvel e-mail.
+&nbsp;     * @return L&#39;utilisateur mis à jour.
+&nbsp;     */
+&nbsp;    public User majUser(User user, String username, String password, String email) {
+<b class="fc">&nbsp;        logger.info(&quot;Mise à jour de l&#39;utilisateur avec l&#39;ID {}&quot;, user.getId());</b>
+<b class="fc">&nbsp;        user.setUsername(username);</b>
+<b class="fc">&nbsp;        user.setEmail(email);</b>
+<b class="fc">&nbsp;        user.setPassword(passwordEncoder.encode(password)); // Hachage du mot de passe</b>
+&nbsp;
+<b class="fc">&nbsp;        User updatedUser = userRepository.save(user);</b>
+<b class="fc">&nbsp;        logger.debug(&quot;Détails de l&#39;utilisateur mis à jour : {}&quot;, updatedUser);</b>
+<b class="fc">&nbsp;        return updatedUser;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Récupère la liste des connexions d&#39;un utilisateur sous forme de DTO.
+&nbsp;     * Charge les connexions, puis les transforme en objets UserDTO.
+&nbsp;     *
+&nbsp;     * @param user L&#39;utilisateur pour lequel les connexions sont récupérées.
+&nbsp;     * @return Une liste d&#39;objets UserDTO représentant les connexions.
+&nbsp;     */
+&nbsp;    public List&lt;UserDTO&gt; getContacts(User user) {
+<b class="fc">&nbsp;        logger.info(&quot;Récupération des contacts pour l&#39;utilisateur avec l&#39;ID {}&quot;, user.getId());</b>
+&nbsp;        // le user connecté n&#39;est pas entièrement chargée - pas de connexion
+<b class="fc">&nbsp;        User currentUser = userRepository.getById(user.getId());</b>
+<b class="fc">&nbsp;        List&lt;User&gt; connections = currentUser.getConnections();</b>
+&nbsp;        // Transformation des entités User en UserDTO
+<b class="fc">&nbsp;        List&lt;UserDTO&gt; contacts = connections.stream()</b>
+<b class="fc">&nbsp;                .map(connection -&gt; new UserDTO(connection.getUsername(), connection.getEmail(), connection.getId()))</b>
+<b class="fc">&nbsp;                .toList();</b>
+<b class="fc">&nbsp;        return contacts;</b>
+&nbsp;        // Retourner la réponse avec les contacts au format JSON
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Ajoute un nouvel utilisateur comme contact en vérifiant son existence
+&nbsp;     * et évite les doublons. Retourne un DTO de l&#39;utilisateur ajouté.
+&nbsp;     *
+&nbsp;     * @param user  L&#39;utilisateur actuel qui ajoute un contact.
+&nbsp;     * @param email L&#39;email de l&#39;utilisateur cible à ajouter comme contact.
+&nbsp;     * @return Un UserDTO pour le contact ajouté, ou null si l&#39;utilisateur cible n&#39;existe pas.
+&nbsp;     */
+&nbsp;    public UserDTO addContactByEmail(User user, String email) {
+&nbsp;        // le user connecté n&#39;est pas entièrement chargée - pas de connexion
+<b class="fc">&nbsp;        User currentUser = userRepository.getById(user.getId());</b>
+&nbsp;        // Vérifiez si l&#39;email cible correspond à un utilisateur existant
+<b class="fc">&nbsp;        User nouveauContact = findUserByEmail(email);</b>
+<b class="fc">&nbsp;        if (nouveauContact == null) {</b>
+&nbsp;            // Si l&#39;utilisateur cible n&#39;existe pas, retournez une erreur 404
+<b class="fc">&nbsp;            return null;</b>
+&nbsp;        }
+&nbsp;        // Vérifier si le nouveau contact est déjà dans la liste de contacts
+<b class="fc">&nbsp;        boolean contactExisteDeja = currentUser.getConnections().stream()</b>
+<b class="fc">&nbsp;                .anyMatch(contact -&gt; contact.getId().equals(nouveauContact.getId()));</b>
+&nbsp;
+<b class="fc">&nbsp;        if (!contactExisteDeja) {</b>
+&nbsp;            // Ajouter le nouveau contact et sauvegarder les modifications
+<b class="fc">&nbsp;            currentUser.getConnections().add(nouveauContact);</b>
+<b class="fc">&nbsp;            userRepository.save(currentUser);</b>
+&nbsp;        }
+&nbsp;
+<b class="fc">&nbsp;        List&lt;User&gt; connections = currentUser.getConnections();</b>
+&nbsp;        // Évitez les doublons
+<b class="pc">&nbsp;        if (!connections.contains(nouveauContact)) {</b>
+<b class="nc">&nbsp;            connections.add(nouveauContact);</b>
+<b class="nc">&nbsp;            userRepository.save(currentUser); // Met à jour les connexions de l&#39;utilisateur</b>
+&nbsp;        }
+&nbsp;
+&nbsp;        // Créez un UserDTO avec le user crée
+<b class="fc">&nbsp;        return new UserDTO(nouveauContact.getUsername(), nouveauContact.getEmail(), nouveauContact.getId());</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Récupère un utilisateur par son identifiant unique.
+&nbsp;     *
+&nbsp;     * @param receiver L&#39;ID de l&#39;utilisateur à récupérer.
+&nbsp;     * @return L&#39;utilisateur correspondant à l&#39;ID fourni.
+&nbsp;     */
+&nbsp;    public User getById(Long receiver) {
+<b class="fc">&nbsp;        return userRepository.getById(receiver);</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-04-13 17:30</div>
+</div>
+</body>
+</html>

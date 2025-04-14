@@ -1,17 +1,23 @@
 package fr.paymybuddy.application.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 
 /**
  * Représente un utilisateur dans le système.
@@ -50,6 +56,12 @@ public class User implements UserDetails {
      */
     private String email;
 
+    @Column(nullable = false)
+    @DecimalMin("0.00")
+    @DecimalMax("9999999.99")
+    @Digits(integer=7, fraction=2)
+
+    private BigDecimal solde;
     /**
      * Liste des connexions de cet utilisateur
      * (autres utilisateurs auxquels il se connecte).
@@ -68,7 +80,6 @@ public class User implements UserDetails {
         this.password = hashedPassword;
     }
 
-
     /**
      * Récupère les rôles ou autorisations associés à l'utilisateur.
      * Actuellement, aucun rôle n'est défini pour cet utilisateur.
@@ -86,49 +97,5 @@ public class User implements UserDetails {
             logger.error("Une erreur est survenue lors de la récupération des autorisations pour l'utilisateur avec l'identifiant : {}", id, e);
             throw e;
         }
-    }
-
-    /**
-     * Vérifie si le compte de l'utilisateur n'est pas expiré.
-     * Par défaut, le compte n'expire jamais.
-     *
-     * @return {@code true} car le compte est toujours actif.
-     */
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    /**
-     * Vérifie si le compte de l'utilisateur n'est pas verrouillé.
-     * Par défaut, le compte n'est jamais verrouillé.
-     *
-     * @return {@code true} car le compte n'est jamais verrouillé.
-     */
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    /**
-     * Vérifie si les informations d'identification (mot de passe) de l'utilisateur n'ont pas expiré.
-     * Par défaut, les informations d'identification ne sont jamais expirées.
-     *
-     * @return {@code true} car les informations d'identification sont toujours valides.
-     */
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    /**
-     * Vérifie si l'utilisateur est activé.
-     * Par défaut, l'utilisateur est toujours activé.
-     *
-     * @return {@code true} car l'utilisateur est actif.
-     */
-    @Override
-    public boolean isEnabled() {
-        return true;
     }
 }

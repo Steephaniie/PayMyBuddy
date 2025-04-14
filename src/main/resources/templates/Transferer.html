@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Transactions de l'utilisateur</title>
+    <title>Transactions</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -25,13 +25,30 @@
         th {
             background-color: #f4f4f4;
         }
+        .btn {
+            display: block; /* Affichage en bloc */
+            width: 100px; /* Largeur fixe pour uniformiser */
+            margin: 10px; /* Marge automatique pour centrer */
+            padding: 10px; /* Espacement interne */
+            font-size: 16px; /* Taille de la police */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Suppression du soulignement */
+            color: white; /* Couleur du texte */
+        }
+
+        /* Style spécifique au bouton de connexion */
+        .btn-login {
+            background-color: #4CAF50; /* Couleur verte pour Connexion */
+        }
     </style>
 </head>
 <body>
-<table style="width: 1024px;margin-left: 100px;">
+<table style="width: 930px;margin-left: 20px;">
     <tr>
         <td style="width: 500px;" >
-            <h3> Pay My Buddy</h3>
+            <h3 th:title="${solde}">Pay My Buddy</h3>
         </td>
         <td>
             <a th:href="@{/transferer}">Transférer</a><br>
@@ -40,7 +57,7 @@
             <a th:href="@{/profil}">Profil</a><br>
         </td>
         <td>
-            <a th:href="@{/addContact}">Ajouter Relation</a><br>
+            <a th:href="@{/contact}">Ajouter relation</a><br>
         </td>
         <td>
             <a th:href="@{/logout}">Se déconnecter</a><br>
@@ -48,28 +65,37 @@
     </tr>
     <tr>
         <td colspan="5">
-            <br><br><br><!-- Formulaire pour créer une nouvelle transaction -->
             <form th:action="@{/payer}" method="post">
-                <!-- Liste déroulante des contacts -->
-                <!--    <label for="id_contact">Sélectionner un contact :</label>-->
-                <select id="id_contact" name="id_contact">
-                    <option value="" disabled>Selectionner une relation</option>
-                    <!-- Boucle pour afficher les contacts -->
-                    <option th:each="contact : ${contacts}" th:value="${contact.id}" th:text="${contact.username}">
-                        Selectionner une relation
-                    </option>
-                </select>
-
-                <!-- Champ pour la description -->
-                <!--    <label for="description">Description :</label>-->
-                <input id="description" name="description" type="text" placeholder="Description" required>
-
-                <!-- Champ pour le montant -->
-                <!--    <label for="montant">Montant (€) :</label>-->
-                <input id="montant" name="montant" type="number" step="1" placeholder="0 €" required>
-
-                <!-- Bouton pour soumettre le formulaire -->
-                <button type="submit">Payer</button>
+                <table>
+                    <tr>
+                        <td style="width: 250px;">
+                            <!-- Liste déroulante des contacts -->
+                            <select id="id_contact" name="id_contact">
+                                <option value="" disabled>Selectionner une relation</option>
+                                <!-- Boucle pour afficher les contacts -->
+                                <option th:each="contact : ${contacts}" th:value="${contact.id}" th:text="${contact.username}">
+                                    Selectionner une relation
+                                </option>
+                            </select>
+                        </td>
+                        <td>
+                            <!-- Champ pour la description -->
+                            <input maxlength="250" style="width: 300px;" id="description" name="description" type="text" placeholder="Description" required>
+                        </td>
+                        <td  >
+                            <!-- Champ pour le montant -->
+                            <input max="9999999" style="width: 70px;" id="montant" name="montant" type="number" step="0.01" placeholder="0.00 €" required>
+                        </td>
+                        <td><!-- Bouton pour soumettre le formulaire -->
+                            <button class="btn btn-login" type="submit">Payer</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <div th:if="${message}" class="error" th:text="${message}"></div>
+                        </td>
+                    </tr>
+                </table>
             </form>
             <br><br><br><br>
             <h4>Mes Transactions</h4>
@@ -87,7 +113,7 @@
                 <tr th:each="transaction : ${transactions}">
                     <td th:text="${transaction.receiverName}">Relation</td>
                     <td th:text="${transaction.description}">Description</td>
-                    <td th:text="${#numbers.formatDecimal(transaction.amount, 0, 0)} + ' €'" style="text-align: right;">Montant</td>
+                    <td th:text="${#numbers.formatDecimal(transaction.amount, 0, 2)} + ' €'" style="text-align: right;">Montant</td>
                 </tr>
                 </tbody>
             </table>

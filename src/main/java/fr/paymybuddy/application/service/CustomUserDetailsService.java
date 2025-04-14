@@ -26,19 +26,20 @@ public class CustomUserDetailsService implements UserDetailsService {
     /**
      * Charge un utilisateur par son nom d'utilisateur.
      *
-     * @param username Le nom d'utilisateur de l'utilisateur à rechercher.
+     * @param mail Le nom d'utilisateur de l'utilisateur à rechercher.
      * @return Un objet {@link UserDetails} représentant l'utilisateur trouvé.
      * @throws UsernameNotFoundException si aucun utilisateur n'est trouvé pour le nom d'utilisateur donné.
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        logger.debug("Tentative de recherche de l'utilisateur avec le nom d'utilisateur : {}", username);
-        User user = userRepository.findByUsername(username)
+    public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
+        logger.debug("Tentative de recherche de l'utilisateur avec le nom d'utilisateur : {}", mail);
+        User user = userRepository.getByEmail(mail)
                 .orElseThrow(() -> {
-                    logger.error("L'utilisateur avec le nom d'utilisateur '{}' est introuvable.", username);
-                    return new UsernameNotFoundException("Utilisateur non trouvé : " + username);
+                    logger.error("L'utilisateur avec le mail '{}' est introuvable.", mail);
+                    return new UsernameNotFoundException("Utilisateur non trouvé : " + mail);
                 });
-        logger.info("L'utilisateur avec le nom d'utilisateur '{}' a été chargé avec succès.", username);
+        logger.info("L'utilisateur avec le mail d'utilisateur '{}' a été chargé avec succès.", mail);
         return user;
     }
+
 }

@@ -1,0 +1,113 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">fr.paymybuddy.application.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: UserRepository (fr.paymybuddy.application.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">UserRepository$MockitoMock$6d9Y4Ad8</td>
+  </tr>
+  <tr>
+    <td class="name">UserRepository$MockitoMock$6d9Y4Ad8$auxiliary$hiqKw2Hw</td>
+  </tr>
+  <tr>
+    <td class="name">UserRepository$MockitoMock$6d9Y4Ad8$auxiliary$hYfDZai1</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package fr.paymybuddy.application.repository;
+&nbsp;
+&nbsp;import fr.paymybuddy.application.model.User;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import java.util.Optional;
+&nbsp;
+&nbsp;/**
+&nbsp; * Dépôt (Repository) pour la gestion des entités utilisateurs.
+&nbsp; * Fournit des méthodes pour effectuer des opérations CRUD sur les utilisateurs.
+&nbsp; */
+&nbsp;@Repository
+&nbsp;public interface UserRepository extends JpaRepository&lt;User, Long&gt; {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Recherche un utilisateur par son adresse e-mail.
+&nbsp;     *
+&nbsp;     * @param email L&#39;adresse e-mail de l&#39;utilisateur.
+&nbsp;     * @return Un objet Optional contenant l&#39;utilisateur si trouvé, ou vide sinon.
+&nbsp;     */
+&nbsp;    User findByEmail(String email);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Recherche un utilisateur par son nom d&#39;utilisateur.
+&nbsp;     *
+&nbsp;     * @param username Le nom d&#39;utilisateur de l&#39;utilisateur.
+&nbsp;     * @return Un objet Optional contenant l&#39;utilisateur si trouvé, ou vide sinon.
+&nbsp;     */
+&nbsp;    Optional&lt;User&gt; findByUsername(String username);
+&nbsp;
+&nbsp;    @Override
+&nbsp;    User getById(Long aLong);
+&nbsp;
+&nbsp;    Optional&lt;User&gt; getByEmail(String email);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-04-13 17:30</div>
+</div>
+</body>
+</html>

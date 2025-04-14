@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -120,7 +121,7 @@ class UserServiceTest {
         String email = "newuser@example.com";
 
         // Simule l'absence d'un utilisateur existant avec cet email et l'encodage du mot de passe
-        when(userRepository.findByUsername(username)).thenReturn(Optional.ofNullable(null));
+        when(userRepository.getByEmail(email)).thenReturn(Optional.ofNullable(null));
         when(passwordEncoder.encode(password)).thenReturn("hashedPassword");
 
         // Utilisateur prévu après enregistrement
@@ -132,7 +133,7 @@ class UserServiceTest {
         userService.registerUser(username, password, email);
 
         // Vérifications des interactions sur les dépendances
-        verify(userRepository, times(1)).findByUsername(username);
+        verify(userRepository, times(1)).getByEmail(email);
         verify(passwordEncoder, times(1)).encode(password);
         verify(userRepository, times(1)).save(any(User.class));
     }
@@ -149,11 +150,11 @@ class UserServiceTest {
         String email = "existing@example.com";
         User existingUser = new User();
 
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(existingUser));
+        when(userRepository.getByEmail(email)).thenReturn(Optional.of(existingUser));
 
         // Act & Assert
         assertThrows(IllegalArgumentException.class, () -> userService.registerUser(username, password, email));
-        verify(userRepository, times(1)).findByUsername(username);
+        verify(userRepository, times(1)).getByEmail(email);
         verify(userRepository, never()).save(any(User.class));
         verify(passwordEncoder, never()).encode(password);
     }
@@ -198,27 +199,6 @@ class UserServiceTest {
     }
 
     /**
-     * Teste l'ajout d'un contact (addContact).
-     * Vérifie que l'utilisateur cible est correctement ajouté aux connexions de l'utilisateur actuel.
-     */
-//    @Test
-//    void testAddContact_Success() {
-//        // Préparation des utilisateurs (actuel et cible)
-//        User currentUser = new User();
-//        currentUser.setUsername("currentUser");
-//
-//        User targetUser = new User();
-//        targetUser.setUsername("targetUser");
-//
-//        // Act
-//        userService.addContactByUser(currentUser, targetUser);
-//
-//        // Assert
-//        assertTrue(currentUser.getConnections().contains(targetUser));
-//        verify(userRepository, times(1)).save(currentUser);
-//    }
-
-    /**
      * Teste la récupération de la liste des contacts (getContacts).
      * Vérifie que la liste des connexions de l'utilisateur est correctement convertie en DTO.
      */
@@ -241,6 +221,85 @@ class UserServiceTest {
         assertEquals("contact1", userDTOList.get(0).getUsername());
         assertEquals("contact2", userDTOList.get(1).getUsername());
     }
+
+    @Test
+    void testAddContactByEmail() {
+        // Préparation des mocks
+        User currentUser = new User();
+        currentUser.setId(1L);
+        currentUser.setEmail("user1@example.com");
+        currentUser.setConnections(new ArrayList<>()); // Initialiser la liste des contacts vide
+
+        User newContact = new User();
+        newContact.setId(2L);
+        newContact.setEmail("user2@example.com");
+
+        // Mock des appels de méthodes
+        when(userRepository.getById(currentUser.getId())).thenReturn(currentUser); // Renvoie l'utilisateur courant
+        when(userService.findUserByEmail("user2@example.com")).thenReturn(newContact); // Renvoie le contact à ajouter
+        when(userRepository.save(any(User.class))).thenReturn(currentUser); // Mock de la sauvegarde
+
+        // Test - Appel de la méthode testée
+        UserDTO userDTO = userService.addContactByEmail(currentUser, "user2@example.com");
+
+        // Assertions
+        assertNotNull(userDTO, "Le UserDTO ne doit pas être null");
+        assertEquals(newContact.getEmail(), userDTO.getEmail(), "L'e-mail du contact doit correspondre");
+        assertEquals(newContact.getUsername(), userDTO.getUsername(), "Le nom d'utilisateur doit correspondre");
+
+        // Vérification des invocations
+        verify(userRepository, times(1)).getById(1L); // Vérifie que la méthode getById a été appelée
+        verify(userRepository, times(1)).save(currentUser); // Vérifie la sauvegarde de currentUser
+    }
+
+
+
+    @Test
+    void testAddContactByEmail_UserNotFound() {
+        // Préparation des mocks
+        User currentUser = new User();
+        currentUser.setId(1L);
+        currentUser.setEmail("user1@example.com");
+
+        when(userRepository.getById(currentUser.getId())).thenReturn(currentUser);
+        when(userService.findUserByEmail("nonexistent@example.com")).thenReturn(null);
+
+        // Tentative d'ajout d'un contact inexistant
+        UserDTO userDTO = userService.addContactByEmail(currentUser, "nonexistent@example.com");
+
+        // Assertions
+        assertNull(userDTO);
+        verify(userRepository, times(1)).getById(1L);
+        verify(userRepository, never()).save(any(User.class));
+    }
+
+    @Test
+    void testAddContactByEmail_UserAlreadyInConnections() {
+        // Préparation des mocks
+        User currentUser = new User();
+        currentUser.setId(1L);
+        currentUser.setEmail("user1@example.com");
+
+        User existingContact = new User();
+        existingContact.setId(2L);
+        existingContact.setEmail("user2@example.com");
+
+        currentUser.setConnections(List.of(existingContact));
+
+        when(userRepository.getById(currentUser.getId())).thenReturn(currentUser);
+        when(userService.findUserByEmail("user2@example.com")).thenReturn(existingContact);
+
+        // Tentative d'ajout d'un contact déjà présent
+        UserDTO userDTO = userService.addContactByEmail(currentUser, "user2@example.com");
+
+        // Assertions
+        assertNotNull(userDTO);
+        assertEquals(existingContact.getUsername(), userDTO.getUsername());
+        assertEquals(existingContact.getEmail(), userDTO.getEmail());
+        verify(userRepository, times(1)).getById(1L);
+        verify(userRepository, never()).save(any(User.class));
+    }
+
 }
 
     

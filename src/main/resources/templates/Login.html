@@ -1,74 +1,106 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Connexion</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pay My Buddy</title>
     <style>
-        /* Style général du corps de la page */
+        /* Style global pour le corps de la page */
         body {
             font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 50px auto;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Hauteur de la vue pour occuper toute l'écran */
+            margin: 0;
         }
 
-        /* Style des groupes de formulaire */
-        .form-group {
-            margin-bottom: 15px;
+        /* Style pour le conteneur principal */
+        .container {
+            background: white;
+            padding: 40px; /* Espacement interne */
+            border-radius: 10px; /* Coins arrondis */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre externe légère */
+            text-align: center; /* Centrage du texte */
         }
 
-        /* Style des étiquettes */
-        label {
-            display: block;
-            margin-bottom: 5px;
+        /* Style pour le titre principal */
+        h1 {
+            margin-bottom: 30px; /* Marge en bas pour espacer les éléments */
+            color: #333;
         }
 
-        /* Style des champs d'entrée */
-        input {
-            width: 100%;
-            padding: 8px;
+        /* Style générique pour les boutons */
+        .btn {
+            display: block; /* Affichage en bloc */
+            width: 140px; /* Largeur fixe pour uniformiser */
+            margin: 10px auto; /* Marge automatique pour centrer */
+            padding: 10px; /* Espacement interne */
+            font-size: 16px; /* Taille de la police */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Suppression du soulignement */
+            color: white; /* Couleur du texte */
         }
 
-        /* Style du bouton de soumission */
-        button {
-            padding: 10px 20px;
-            background-color: #28a745;
-            color: white;
-            border: none;
-            cursor: pointer;
+        /* Style générique pour les boutons */
+        .logo {
+            display: block; /* Affichage en bloc */
+            width: 150px; /* Largeur fixe pour uniformiser */
+            margin: 10px auto; /* Marge automatique pour centrer */
+            padding: 10px; /* Espacement interne */
+            font-size: 16px; /* Taille de la police */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Suppression du soulignement */
+            color: white; /* Couleur du texte */
+            background-color: #4CAF50; /* Couleur verte pour Connexion */
         }
 
-        /* Style du bouton de soumission lorsque la souris survole */
-        button:hover {
-            background-color: #218838;
+        /* Style spécifique au bouton de connexion */
+        .btn-login {
+            background-color: #4CAF50; /* Couleur verte pour Connexion */
         }
 
-        /* Style des messages d'erreur */
-        .error {
-            color: red;
+        /* Style spécifique au bouton d'enregistrement */
+        .btn-register {
+            background-color: #2196F3; /* Couleur bleue pour Enregistrement */
+        }
+
+        /* Effet au survol des boutons */
+        .btn:hover {
+            opacity: 0.9; /* Légère transparence pour effet visuel */
         }
     </style>
 </head>
 <body>
-<h2>Connexion</h2>
-<!-- Formulaire de connexion -->
-<form th:action="@{/login}" method="post">
-    <div class="form-group">
-        <label for="username">Nom d'utilisateur :</label>
-        <!-- Champ pour le nom d'utilisateur -->
-        <input type="text" id="username" name="username" required/>
-    </div>
-    <div class="form-group">
-        <label for="password">Mot de passe :</label>
-        <!-- Champ pour le mot de passe -->
-        <input type="password" id="password" name="password" required/>
-    </div>
-    <!-- Bouton pour soumettre le formulaire -->
-    <button type="submit">Se connecter</button>
-</form>
-<!-- Message en cas d'erreur de connexion -->
-<div th:if="${param.error}" class="error">Nom d'utilisateur ou mot de passe incorrect.</div>
-<!-- Message en cas de déconnexion réussie -->
-<div th:if="${param.logout}" class="success">Vous avez été déconnecté avec succès.</div>
-<p>Pas de compte ? <a th:href="@{/register}">Inscrivez-vous ici</a></p>
+<div class="container">
+    <h1 class="logo">Pay My Buddy</h1>
+    <br><br>
+    <!-- Formulaire d'inscription avec action liée à l'URL /register -->
+    <form th:action="@{/login}" method="post">
+        <div class="form-group">
+            <!-- Champ pour le nom d'utilisateur -->
+            <input maxlength="250" type="text" id="username" name="username" placeholder="Mail"required/>
+        </div>
+        <br>
+        <div class="form-group">
+            <!-- Champ pour le mot de passe -->
+            <input maxlength="250" type="password" id="password" name="password" placeholder="Mot de passe" required/>
+        </div>
+        <br>
+        <!-- Bouton pour soumettre le formulaire -->
+        <button  class="btn btn-login"  type="submit">Se connecter</button>
+    </form>
+    <!-- Message en cas d'erreur de connexion -->
+    <div th:if="${param.error}" class="error">Nom d'utilisateur ou mot de passe incorrect.</div>
+    <!-- Message en cas de déconnexion réussie -->
+    <div th:if="${param.logout}" class="success">Vous avez été déconnecté avec succès.</div>
+    <p>Pas de compte ? <a th:href="@{/register}">Inscrivez-vous ici</a></p>
+</div>
 </body>
 </html>
+

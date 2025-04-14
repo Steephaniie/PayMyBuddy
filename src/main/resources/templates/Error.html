@@ -1,11 +1,60 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Erreur</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oups !</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
 </head>
 <body>
-    <h1>Une erreur est survenue</h1>
-    <p>Nous n'avons pas pu charger vos transactions. Veuillez réessayer plus tard.</p>
+<table style="width: 930px;margin-left: 20px;">
+    <tr>
+        <td style="width: 500px;">
+            <h3> Pay My Buddy</h3>
+        </td>
+        <td>
+            <a th:href="@{/transferer}">Transférer</a><br>
+        </td>
+        <td>
+            <a th:href="@{/profil}">Profil</a><br>
+        </td>
+        <td>
+            <a th:href="@{/contact}">Ajouter relation</a><br>
+        </td>
+        <td>
+            <a th:href="@{/logout}">Se déconnecter</a><br>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <br><br><br><br><br>
+            <div style="text-align: center">
+                <h1>Une erreur est survenue</h1>
+                <p>Nous n'avons pas pu charger vos transactions. Veuillez réessayer plus tard.</p>
+            </div>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

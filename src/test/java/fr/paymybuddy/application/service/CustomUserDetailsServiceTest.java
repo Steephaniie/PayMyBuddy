@@ -53,14 +53,14 @@ class CustomUserDetailsServiceTest {
         User mockUser = new User();
         mockUser.setUsername(username);
         mockUser.setPassword("password"); // Mot de passe simulé
-        when(userRepository.findByUsername(username)).thenReturn(Optional.of(mockUser)); // Mock du UserRepository
+        when(userRepository.getByEmail(username)).thenReturn(Optional.of(mockUser)); // Mock du UserRepository
 
         // Action testée (When)
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(username);
 
         // Vérifications (Then)
         assertEquals(username, userDetails.getUsername(), "Le nom d'utilisateur devrait correspondre.");
-        verify(userRepository, times(1)).findByUsername(username); // Vérifie l'appel au UserRepository
+        verify(userRepository, times(1)).getByEmail(username); // Vérifie l'appel au UserRepository
     }
 
     /**
@@ -70,13 +70,13 @@ class CustomUserDetailsServiceTest {
     @Test
     void loadUserByUsername_UserNotFound() {
         // Données de départ (Given)
-        String username = "unknownuser";
-        when(userRepository.findByUsername(username)).thenReturn(Optional.empty()); // Simule l'absence de l'utilisateur
+        String email = "unknownuser";
+        when(userRepository.getByEmail(email)).thenReturn(Optional.empty()); // Simule l'absence de l'utilisateur
 
         // Action testée et vérification (When & Then)
         assertThrows(UsernameNotFoundException.class,
-                () -> customUserDetailsService.loadUserByUsername(username),
+                () -> customUserDetailsService.loadUserByUsername(email),
                 "Une exception devrait être levée pour un utilisateur inexistant.");
-        verify(userRepository, times(1)).findByUsername(username); // Vérifie l'appel à UserRepository
+        verify(userRepository, times(1)).getByEmail(email); // Vérifie l'appel à UserRepository
     }
 }

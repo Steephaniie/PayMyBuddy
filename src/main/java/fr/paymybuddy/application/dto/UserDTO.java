@@ -1,8 +1,10 @@
 package fr.paymybuddy.application.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +20,8 @@ import java.util.Objects;
  */
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class UserDTO {
     private static final Logger logger = LoggerFactory.getLogger(UserDTO.class);
 
@@ -39,14 +43,5 @@ public class UserDTO {
      * Identifiant unique de l'utilisateur.
      */
     private Long id;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserDTO userDTO = (UserDTO) o;
-        return Objects.equals(username, userDTO.username) &&
-                Objects.equals(email, userDTO.email);
-    }
 
 }

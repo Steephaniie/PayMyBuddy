@@ -1,13 +1,13 @@
 package fr.paymybuddy.application.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+import lombok.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Objects;
+import java.math.BigDecimal;
 
 /**
  * DTO pour contenir uniquement les informations nécessaires dans une transaction :
@@ -16,6 +16,8 @@ import java.util.Objects;
 @Getter
 @Setter
 @AllArgsConstructor
+@EqualsAndHashCode
+@NoArgsConstructor
 public class TransactionDTO {
 
     private static final Logger logger = LoggerFactory.getLogger(TransactionDTO.class);
@@ -33,13 +35,9 @@ public class TransactionDTO {
     /**
      * Le montant associé à la transaction.
      */
-    private double amount;
+    @DecimalMin("0.00")
+    @DecimalMax("9999999.99")
+    @Digits(integer=7, fraction=2)
+    private BigDecimal amount;
 
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        TransactionDTO that = (TransactionDTO) o;
-        return Double.compare(amount, that.amount) == 0 && Objects.equals(receiverName, that.receiverName) && Objects.equals(description, that.description);
-    }
 }

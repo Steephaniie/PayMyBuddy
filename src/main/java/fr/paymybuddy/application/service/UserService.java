@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -70,18 +71,19 @@ public class UserService {
     public void registerUser(String username, String password, String email) {
         logger.info("Tentative d'enregistrement d'un nouvel utilisateur");
         logger.debug("Vérification si le nom d'utilisateur '{}' est déjà pris", username);
-
-        if (userRepository.findByUsername(username).isPresent()) {
-            logger.error("Échec de l'enregistrement : Le nom d'utilisateur '{}' est déjà pris", username);
-            throw new IllegalArgumentException("Ce nom est déjà pris.");
+        email = email.trim();
+        if (userRepository.getByEmail(email).isPresent()) {
+            logger.error("Échec de l'enregistrement : cet email '{}' est déjà utilisé", username);
+            throw new IllegalArgumentException("Cet email est déjà pris.");
         }
 
         User user = new User();
         user.setUsername(username);
         user.setEmail(email);
+        //TODO par defaut les nouveaux demarrent avec 100 €
+        user.setSolde(new BigDecimal("100"));
         user.setPassword(passwordEncoder.encode(password)); // Hachage du mot de passe
         userRepository.save(user);
-
         logger.info("Utilisateur '{}' enregistré avec succès", username);
     }
 
@@ -145,6 +147,16 @@ public class UserService {
             // Si l'utilisateur cible n'existe pas, retournez une erreur 404
             return null;
         }
+        // Vérifier si le nouveau contact est déjà dans la liste de contacts
+        boolean contactExisteDeja = currentUser.getConnections().stream()
+                .anyMatch(contact -> contact.getId().equals(nouveauContact.getId()));
+
+        if (!contactExisteDeja) {
+            // Ajouter le nouveau contact et sauvegarder les modifications
+            currentUser.getConnections().add(nouveauContact);
+            userRepository.save(currentUser);
+        }
+
         List<User> connections = currentUser.getConnections();
         // Évitez les doublons
         if (!connections.contains(nouveauContact)) {

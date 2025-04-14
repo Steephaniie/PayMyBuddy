@@ -1,0 +1,236 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > UserController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">fr.paymybuddy.application.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: UserController (fr.paymybuddy.application.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">UserController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (2/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    84,4%
+  </span>
+  <span class="absValue">
+    (27/32)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package fr.paymybuddy.application.controller;
+&nbsp;
+&nbsp;import fr.paymybuddy.application.dto.UserDTO;
+&nbsp;import fr.paymybuddy.application.model.User;
+&nbsp;import fr.paymybuddy.application.service.UserService;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;import org.springframework.security.core.annotation.AuthenticationPrincipal;
+&nbsp;import org.springframework.stereotype.Controller;
+&nbsp;import org.springframework.ui.Model;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.springframework.web.bind.annotation.PostMapping;
+&nbsp;import org.springframework.web.bind.annotation.RequestParam;
+&nbsp;
+&nbsp;@Controller
+&nbsp;@AllArgsConstructor
+&nbsp;public class UserController {
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(UserController.class);</b>
+&nbsp;
+&nbsp;    private final UserService userService;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Affiche le formulaire de profil de l&#39;utilisateur connecté.
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/profil&quot;)
+&nbsp;    public String getUserProfile(@AuthenticationPrincipal User userConnecte, Model model) {
+<b class="fc">&nbsp;        logger.debug(&quot;Début de la méthode getUserProfile pour l&#39;utilisateur : {}&quot;, userConnecte.getUsername());</b>
+&nbsp;
+&nbsp;        // Récupération des informations de l&#39;utilisateur connecté
+<b class="fc">&nbsp;        UserDTO userDTO = new UserDTO(userConnecte.getUsername(), userConnecte.getEmail(), userConnecte.getId());</b>
+<b class="fc">&nbsp;        model.addAttribute(&quot;userDTO&quot;, userDTO);</b>
+&nbsp;
+<b class="fc">&nbsp;        logger.debug(&quot;Profil utilisateur chargé avec succès pour l&#39;utilisateur : {}&quot;, userConnecte.getUsername());</b>
+<b class="fc">&nbsp;        return &quot;Profil&quot;;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Met à jour le profil de l&#39;utilisateur connecté.
+&nbsp;     */
+&nbsp;    @PostMapping(&quot;/profil&quot;)
+&nbsp;    public String updateUserProfile(
+&nbsp;            @AuthenticationPrincipal User userConnecte,
+&nbsp;            String username,
+&nbsp;            String email,
+&nbsp;            String password,
+&nbsp;            Model model) {
+&nbsp;
+<b class="fc">&nbsp;        logger.debug(&quot;Début de la méthode updateUserProfile pour l&#39;utilisateur : {}&quot;, userConnecte.getUsername());</b>
+&nbsp;
+&nbsp;        try {
+&nbsp;            // Appel au service pour effectuer la mise à jour
+<b class="fc">&nbsp;            User updatedUser = userService.majUser(userConnecte, username, password, email);</b>
+<b class="fc">&nbsp;            UserDTO userDTO = new UserDTO(updatedUser.getUsername(), updatedUser.getEmail(), updatedUser.getId());</b>
+&nbsp;
+<b class="fc">&nbsp;            model.addAttribute(&quot;userDTO&quot;, userDTO);</b>
+<b class="fc">&nbsp;            model.addAttribute(&quot;succes&quot;, &quot;Profil mis à jour avec succès !&quot;);</b>
+&nbsp;
+<b class="fc">&nbsp;            logger.info(&quot;Profil utilisateur mis à jour avec succès pour l&#39;utilisateur : {}&quot;, updatedUser.getUsername());</b>
+<b class="fc">&nbsp;            return &quot;Profil&quot;;</b>
+&nbsp;        } catch (Exception e) {
+<b class="fc">&nbsp;            logger.error(&quot;Une erreur s&#39;est produite lors de la mise à jour du profil pour l&#39;utilisateur : {}&quot;, userConnecte.getUsername(), e);</b>
+<b class="fc">&nbsp;            model.addAttribute(&quot;error&quot;, &quot;Une erreur s&#39;est produite lors de la mise à jour du profil.&quot;);</b>
+<b class="fc">&nbsp;            return &quot;Profil&quot;;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Affiche la page contenant le formulaire d&#39;ajout d&#39;un nouveau contact.
+&nbsp;     *
+&nbsp;     * @param userConnecte  L&#39;utilisateur actuellement connecté.
+&nbsp;     * @param model L&#39;objet modèle pour passer des attributs à la vue.
+&nbsp;     * @return Le nom de la vue `Contact.html`.
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/contact&quot;)
+&nbsp;    public String showAddContactPage(@AuthenticationPrincipal User userConnecte, Model model) {
+<b class="fc">&nbsp;        logger.debug(&quot;Début de la méthode showAddContactPage pour l&#39;utilisateur : {}&quot;, userConnecte.getUsername());</b>
+&nbsp;
+&nbsp;        // Passez l&#39;utilisateur connecté à la vue pour personnalisation (exemple : affichage de son nom)
+<b class="fc">&nbsp;        model.addAttribute(&quot;username&quot;, userConnecte.getUsername());</b>
+&nbsp;
+<b class="fc">&nbsp;        logger.debug(&quot;Page d&#39;ajout de contact chargée avec succès pour l&#39;utilisateur : {}&quot;, userConnecte.getUsername());</b>
+<b class="fc">&nbsp;        return &quot;Contact&quot;; // Renvoie vers la vue `Contact.html`</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Ajoute un nouvel utilisateur à la liste des contacts de l&#39;utilisateur connecté.
+&nbsp;     *
+&nbsp;     * @param userConnecte  L&#39;utilisateur actuellement authentifié, fourni par Spring Security.
+&nbsp;     * @param email L&#39;adresse email de l&#39;utilisateur à ajouter comme contact.
+&nbsp;     * @return Une réponse HTTP contenant l&#39;objet UserDTO correspondant au contact ajouté,
+&nbsp;     * ou un statut HTTP 404 si le contact n&#39;a pas pu être trouvé.
+&nbsp;     */
+&nbsp;    @PostMapping(&quot;/contact&quot;)
+&nbsp;    public String addContact(
+&nbsp;            @AuthenticationPrincipal User userConnecte,
+&nbsp;            @RequestParam String email,
+&nbsp;            Model model
+&nbsp;            ) {
+<b class="fc">&nbsp;        logger.debug(&quot;Début de la méthode contact pour l&#39;utilisateur : {}&quot;, userConnecte.getUsername());</b>
+&nbsp;
+<b class="pc">&nbsp;        if(email.equals(userConnecte.getEmail())) {</b>
+<b class="nc">&nbsp;            model.addAttribute(&quot;error&quot;, &quot;Vous ne pouvez pas vous ajouter comme contacts !&quot;);</b>
+<b class="nc">&nbsp;            return &quot;Contact&quot;; // Renvoie vers la vue `Contact.html`;</b>
+&nbsp;        }
+&nbsp;        // Récupération des contacts de l&#39;utilisateur connecté
+<b class="fc">&nbsp;        UserDTO usersContacts = userService.addContactByEmail(userConnecte, email);</b>
+<b class="pc">&nbsp;        if (usersContacts != null) {</b>
+<b class="fc">&nbsp;            logger.info(&quot;Contact avec l&#39;email &#39;{}&#39; ajouté avec succès pour l&#39;utilisateur : {}&quot;, email, userConnecte.getUsername());</b>
+<b class="fc">&nbsp;            model.addAttribute(&quot;succes&quot;, &quot;Contact avec l&#39;email &quot;+email+&quot;  ajouté avec succès&quot;);</b>
+<b class="fc">&nbsp;            return &quot;Contact&quot;; // Renvoie vers la vue `Contact.html`;</b>
+&nbsp;        } else {
+<b class="nc">&nbsp;            logger.error(&quot;Échec de l&#39;ajout du contact pour l&#39;utilisateur : {} avec l&#39;email : {}&quot;, userConnecte.getUsername(), email);</b>
+<b class="nc">&nbsp;            model.addAttribute(&quot;error&quot;, &quot;Ce contact n&#39;existe pas &quot;);</b>
+<b class="nc">&nbsp;            return  &quot;Contact&quot;; // Renvoie vers la vue `Contact.html`;</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-04-13 17:30</div>
+</div>
+</body>
+</html>

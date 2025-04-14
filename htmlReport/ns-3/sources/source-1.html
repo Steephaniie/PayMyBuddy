@@ -1,0 +1,156 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > HomeController</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">fr.paymybuddy.application.controller</a>
+</div>
+
+<h1>Coverage Summary for Class: HomeController (fr.paymybuddy.application.controller)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">HomeController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    80%
+  </span>
+  <span class="absValue">
+    (8/10)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package fr.paymybuddy.application.controller;
+&nbsp;
+&nbsp;import org.springframework.stereotype.Controller;
+&nbsp;import org.springframework.web.bind.annotation.GetMapping;
+&nbsp;import org.slf4j.Logger;
+&nbsp;import org.slf4j.LoggerFactory;
+&nbsp;
+&nbsp;/**
+&nbsp; * Contrôleur Spring MVC pour gérer les routes principales de l&#39;application.
+&nbsp; * Ce contrôleur gère les redirections vers les pages statiques telles que l&#39;accueil, la connexion et le portail.
+&nbsp; */
+&nbsp;@Controller
+<b class="fc">&nbsp;public class HomeController {</b>
+&nbsp;
+<b class="fc">&nbsp;    private static final Logger logger = LoggerFactory.getLogger(HomeController.class);</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gère la route GET pour la page de connexion.
+&nbsp;     *
+&nbsp;     * @return le nom de la vue correspondante pour la connexion (Login.html).
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/login&quot;)
+&nbsp;    public String login() {
+<b class="fc">&nbsp;        logger.debug(&quot;Traitement de la requête GET pour la route /login.&quot;);</b>
+&nbsp;        try {
+&nbsp;            // Retourne la vue de connexion
+<b class="fc">&nbsp;            logger.info(&quot;Accès réussi à la page de connexion.&quot;);</b>
+<b class="fc">&nbsp;            return &quot;Login&quot;;</b>
+&nbsp;        } catch (Exception e) {
+<b class="nc">&nbsp;            logger.error(&quot;Erreur lors du chargement de la page de connexion.&quot;, e);</b>
+&nbsp;            throw e;
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Gère la route GET pour la page du portail utilisateur.
+&nbsp;     *
+&nbsp;     * @return le nom de la vue correspondante pour le portail (Portail.html).
+&nbsp;     */
+&nbsp;    @GetMapping(&quot;/portail&quot;)
+&nbsp;    public String portail() {
+<b class="fc">&nbsp;        logger.debug(&quot;Traitement de la requête GET pour la route /portail.&quot;);</b>
+&nbsp;        try {
+&nbsp;            // Retourne la vue du portail
+<b class="fc">&nbsp;            logger.info(&quot;Accès réussi à la page du portail.&quot;);</b>
+<b class="fc">&nbsp;            return &quot;Portail&quot;;</b>
+&nbsp;        } catch (Exception e) {
+<b class="nc">&nbsp;            logger.error(&quot;Erreur lors du chargement de la page du portail.&quot;, e);</b>
+&nbsp;            throw e;
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-04-13 17:30</div>
+</div>
+</body>
+</html>

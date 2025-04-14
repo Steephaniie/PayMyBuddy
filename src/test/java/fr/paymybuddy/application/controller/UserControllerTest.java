@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * à la gestion du profil utilisateur dans l'application.
  */
 @SpringBootTest
-class UserProfileControllerTest {
+class UserControllerTest {
 
     private MockMvc mockMvc;
 
@@ -41,7 +41,7 @@ class UserProfileControllerTest {
     private Model model; // Mock du model pour les vues
 
     @Autowired
-    private UserProfileController userProfileController; // Injecte les mocks dans UserProfileController
+    private UserController userController; // Injecte les mocks dans UserProfileController
 
     /**
      * Initialise les mocks et l'objet MockMvc avant chaque test.
@@ -50,7 +50,7 @@ class UserProfileControllerTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(userProfileController).build(); // Configuration de MockMvc
+        mockMvc = MockMvcBuilders.standaloneSetup(userController).build(); // Configuration de MockMvc
         // Simuler un utilisateur authentifié avec des données fictives
         authenticatedUser = new User();
         authenticatedUser.setId(1L);
@@ -74,7 +74,7 @@ class UserProfileControllerTest {
 
 
         // Appel de la méthode et vérification des résultats
-        mockMvc.perform(get("/profile")
+        mockMvc.perform(get("/profil")
                         .principal(mockUser::getUsername))
                 .andExpect(status().isOk())
                 .andExpect(view().name("Profil"))
@@ -102,11 +102,10 @@ class UserProfileControllerTest {
                 .thenReturn(user);
 
         // Appeler la méthode testée
-        String response = userProfileController.updateUserProfile(authenticatedUser, newUsername, newEmail,newPassword, model);
+        String response = userController.updateUserProfile(authenticatedUser, newUsername, newEmail,newPassword, model);
 
         assertEquals("Profil", response);
         // Vérifie que la méthode du service a été appelée avec les bons arguments
-//        verify(userService).majUser(authenticatedUser, newUsername, newPassword, newEmail);
         verify(userService, times(1)).majUser(authenticatedUser, newUsername, newPassword, newEmail);
     }
 
@@ -129,24 +128,23 @@ class UserProfileControllerTest {
                 .thenThrow(new RuntimeException("Erreur"));
 
         // Simulation de l'appel à la méthode POST /profile
-        mockMvc.perform(post("/profile")
+        mockMvc.perform(post("/profil")
                         .flashAttr("userConnecte", mockUser) // Simulation de l'utilisateur connecté
                         .param("username", "newUsername")
                         .param("email", "new@test.com")
                         .param("password", "newPassword"))
                 .andExpect(status().isOk()) // Vérifie que le statut de la réponse est 200 (OK)
                 .andExpect(view().name("Profil")) // Vérifie que la vue retournée est "profile"
-                .andExpect(model().attributeExists("errorMessage")) // Vérifie qu'un message d'erreur est présent
-                .andExpect(model().attribute("errorMessage", "Une erreur s'est produite lors de la mise à jour du profil.")); // Vérifie le contenu du message d'erreur
+                .andExpect(model().attributeExists("error")) // Vérifie qu'un message d'erreur est présent
+                .andExpect(model().attribute("error", "Une erreur s'est produite lors de la mise à jour du profil.")); // Vérifie le contenu du message d'erreur
 
         // Vérifie que la méthode du service a été appelée
-//        verify(userService).majUser(eq(mockUser), eq("newUsername"), eq("newPassword"), eq("new@test.com"));
         verify(userService, times(1)).majUser(any(), eq("newUsername"), eq("newPassword"), eq("new@test.com"));
     }
 
     /**
      * Teste l'affichage de la page "Ajouter un contact".
-     * Vérifie que l'utilisateur connecté est correctement affiché dans la vue "addContact".
+     * Vérifie que l'utilisateur connecté est correctement affiché dans la vue "contact".
      *
      * @throws Exception si une erreur se produit lors de la simulation.
      */
@@ -159,28 +157,25 @@ class UserProfileControllerTest {
         mockUser.setId(1L);
 
           // Simulation de l'appel à la méthode GET /addContact
-        mockMvc.perform(get("/addContact")
+        mockMvc.perform(get("/contact")
                         .flashAttr("userConnecte", mockUser)
                 .principal(mockUser::getUsername)) // Simulation de l'utilisateur connecté
                 .andExpect(status().isOk()) // Vérifie que le statut de la réponse est 200 (OK)
-                .andExpect(view().name("Contact")); // Vérifie que la vue retournée est "addContact"
+                .andExpect(view().name("Contact")); // Vérifie que la vue retournée est "contact"
     }
 
     @Test
     void testAddContactSuccess() throws Exception {
 
         String contactUsername = "updatedUser";
-        String contactPassword = "updatedPassword";
         String contactEmail = "updated@example.com";
 
         UserDTO userDto = new UserDTO(contactUsername,contactEmail,2L);
         when(userService.addContactByEmail(authenticatedUser, contactEmail))
                 .thenReturn(userDto);
-
         // Appeler la méthode testée
-        ResponseEntity<UserDTO> a = userProfileController.addContact(authenticatedUser, contactEmail);
-        assert a.getStatusCode().is2xxSuccessful();
-        assert Objects.requireNonNull(a.getBody()).getUsername().equals(contactUsername);
+         String a = userController.addContact(authenticatedUser, contactEmail,model);
+        assertEquals("Contact", a);
         verify(userService, times(1)).addContactByEmail(authenticatedUser, contactEmail);
     }
 }

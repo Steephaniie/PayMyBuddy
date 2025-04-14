@@ -1,82 +1,112 @@
 <!DOCTYPE html>
-<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Inscription</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S'enregistrer</title>
     <style>
         /* Style global pour le corps de la page */
         body {
             font-family: Arial, sans-serif;
-            max-width: 400px;
-            margin: 50px auto;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Hauteur de la vue pour occuper toute l'écran */
+            margin: 0;
         }
 
-        /* Des marges pour chaque groupe de champs de formulaire */
-        .form-group {
-            margin-bottom: 15px;
+        /* Style pour le conteneur principal */
+        .container {
+            background: white;
+            padding: 40px; /* Espacement interne */
+            border-radius: 10px; /* Coins arrondis */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Ombre externe légère */
+            text-align: center; /* Centrage du texte */
         }
 
-        /* Style des labels */
-        label {
-            display: block;
-            margin-bottom: 5px;
+        /* Style pour le titre principal */
+        h1 {
+            margin-bottom: 30px; /* Marge en bas pour espacer les éléments */
+            color: #333;
         }
 
-        /* Style des champs de saisie */
-        input {
-            width: 100%;
-            padding: 8px;
+        /* Style générique pour les boutons */
+        .btn {
+            display: block; /* Affichage en bloc */
+            width: 100px; /* Largeur fixe pour uniformiser */
+            margin: 10px auto; /* Marge automatique pour centrer */
+            padding: 10px; /* Espacement interne */
+            font-size: 16px; /* Taille de la police */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Suppression du soulignement */
+            color: white; /* Couleur du texte */
         }
 
-        /* Style du bouton principal */
-        button {
-            padding: 10px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            cursor: pointer;
+        /* Style générique pour les boutons */
+        .logo {
+            display: block; /* Affichage en bloc */
+            width: 150px; /* Largeur fixe pour uniformiser */
+            margin: 10px auto; /* Marge automatique pour centrer */
+            padding: 10px; /* Espacement interne */
+            font-size: 16px; /* Taille de la police */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Suppression du soulignement */
+            color: white; /* Couleur du texte */
+            background-color: #4CAF50; /* Couleur verte pour Connexion */
         }
 
-        /* Style du bouton lors du survol */
-        button:hover {
-            background-color: #0056b3;
+        /* Style spécifique au bouton de connexion */
+        .btn-login {
+            background-color: #4CAF50; /* Couleur verte pour Connexion */
         }
 
-        /* Style pour les messages d'erreur */
-        .error {
-            color: red;
+        /* Style spécifique au bouton d'enregistrement */
+        .btn-register {
+            background-color: #2196F3; /* Couleur bleue pour Enregistrement */
+        }
+
+        /* Effet au survol des boutons */
+        .btn:hover {
+            opacity: 0.9; /* Légère transparence pour effet visuel */
         }
     </style>
 </head>
 <body>
-<!-- Titre de la page -->
-<h2>Inscription</h2>
+<div class="container">
+    <h1 class="logo">Pay My Buddy</h1>
+    <br><br>
+    <!-- Formulaire d'inscription avec action liée à l'URL /register -->
+    <form th:action="@{/register}" method="post">
+        <div class="form-group">
+            <!-- Champ pour le nom d'utilisateur -->
+            <input maxlength="250" type="text" id="username" name="username" placeholder="Username" required/>
+        </div>
+        <br>
+        <div class="form-group">
+            <!-- Champ pour l'adresse email -->
+            <input maxlength="250" type="text" id="email" name="email" placeholder="Mail" required/>
+        </div>
+        <br>
+        <div class="form-group">
+            <!-- Champ pour le mot de passe -->
+            <input maxlength="250" type="password" id="password" name="password" placeholder="Mot de passe" required/>
+        </div>
+        <br>
+        <!-- Bouton pour soumettre le formulaire -->
+        <button class="btn btn-login" type="submit">S'inscrire</button>
+    </form>
 
-<!-- Formulaire d'inscription avec action liée à l'URL /register -->
-<form th:action="@{/register}" method="post">
-    <div class="form-group">
-        <!-- Champ pour le nom d'utilisateur -->
-        <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="username" required/>
-    </div>
-    <div class="form-group">
-        <!-- Champ pour le mot de passe -->
-        <label for="password">Mot de passe :</label>
-        <input type="password" id="password" name="password" required/>
-    </div>
-    <div class="form-group">
-        <!-- Champ pour l'adresse email -->
-        <label for="email">Email :</label>
-        <input type="text" id="email" name="email" required/>
-    </div>
-    <!-- Bouton pour soumettre le formulaire -->
-    <button type="submit">S'inscrire</button>
-</form>
+    <!-- Zone qui affiche un message d'erreur si une variable "error" existe -->
+    <div th:if="${error}" class="error" th:text="${error}"></div>
 
-<!-- Zone qui affiche un message d'erreur si une variable "error" existe -->
-<div th:if="${error}" class="error" th:text="${error}"></div>
-
-<!-- Lien pour rediriger les utilisateurs déjà inscrits vers la page de connexion -->
-<p>Déjà inscrit ? <a th:href="@{/login}">Connectez-vous ici</a></p>
+    <!-- Lien pour rediriger les utilisateurs déjà inscrits vers la page de connexion -->
+    <p>Déjà inscrit ? <a th:href="@{/login}">Connectez-vous ici</a></p>
+</div>
 </body>
 </html>
+

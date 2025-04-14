@@ -31,4 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Override
     User getById(Long aLong);
+
+    Optional<User> getByEmail(String email);
 }

@@ -11,16 +11,7 @@ import org.slf4j.LoggerFactory;
  */
 @SpringBootApplication
 public class Application {
-
-    private static final Logger logger = LoggerFactory.getLogger(Application.class);
-
-    /**
-     * Lance l'application Spring Boot.
-     *
-     * @param args Arguments de la ligne de commande.
-     */
     public static void main(String[] args) {
 			SpringApplication.run(Application.class, args);
     }
-
 }

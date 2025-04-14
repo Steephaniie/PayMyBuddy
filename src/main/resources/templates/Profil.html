@@ -1,39 +1,114 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Modifier mon profil</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .btn {
+            display: block; /* Affichage en bloc */
+            width: 100px; /* Largeur fixe pour uniformiser */
+            margin: 10px; /* Marge automatique pour centrer */
+            padding: 10px; /* Espacement interne */
+            font-size: 16px; /* Taille de la police */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Suppression du soulignement */
+            color: white; /* Couleur du texte */
+        }
+
+        /* Style spécifique au bouton de connexion */
+        .btn-login {
+            background-color: #4CAF50; /* Couleur verte pour Connexion */
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
 </head>
 <body>
-<h1>Modifier mon profil</h1>
-
-<!-- La section ci-dessous affiche un message de succès si la mise à jour a été effectuée avec succès -->
-<div th:if="${successMessage}" style="color: green;">
-    <!-- Affiche le contenu du message de succès transmis depuis le contrôleur -->
-    <strong th:text="${successMessage}"></strong>
-</div>
-
-<!-- Formulaire de mise à jour des informations du profil de l'utilisateur -->
-<form th:action="@{/profile}" method="post">
-    <div>
-        <!-- Champ pour modifier le nom d'utilisateur -->
-        <label for="username">Nom d'utilisateur:</label>
-        <input type="text" id="username" name="username" placeholder="@username" th:value="${userDTO.username}"
-               required>
-    </div>
-    <div>
-        <!-- Champ pour modifier l'adresse email -->
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" placeholder="nom@domain.com" th:value="${userDTO.email}" required>
-    </div>
-    <div>
-        <!-- Champ pour modifier le mot de passe -->
-        <label for="password">Mot de passe:</label>
-        <input type="password" id="password" name="password" placeholder="mot de passe" required>
-    </div>
-    <div>
-        <!-- Bouton pour soumettre les modifications -->
-        <button type="submit">Modifier</button>
-    </div>
-</form>
+<table style="width: 930px;margin-left: 20px;">
+    <tr>
+        <td style="width: 500px;">
+            <h3> Pay My Buddy</h3>
+        </td>
+        <td>
+            <a th:href="@{/transferer}">Transférer</a><br>
+        </td>
+        <td>
+            <a th:href="@{/profil}">Profil</a><br>
+        </td>
+        <td>
+            <a th:href="@{/contact}">Ajouter relation</a><br>
+        </td>
+        <td>
+            <a th:href="@{/logout}">Se déconnecter</a><br>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <br><br><br><!-- Formulaire de mise à jour des informations du profil de l'utilisateur -->
+            <form th:action="@{/profil}" method="post">
+                <table style=" margin-left: 150px;">
+                    <tr>
+                        <td style="width: 150px;">
+                            Username
+                        </td>
+                        <td  style="width: 200px;">
+                            <input maxlength="250" type="text" id="username" name="username" placeholder="@username"
+                                   th:value="${userDTO.username}" required>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Mail
+                        </td>
+                        <td>
+                            <input maxlength="250" type="email" id="email" name="email" placeholder="nom@domain.com"
+                                   th:value="${userDTO.email}" required>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Mot de passe
+                        </td>
+                        <td>
+                            <input maxlength="250" type="password" id="password" name="password" placeholder="mot de passe" required>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div th:if="${succes}" class="error" th:text="${succes}"></div>
+                            <div th:if="${error}" class="error" th:text="${error}"></div>
+                        </td>
+                        <td>
+                            <button class="btn btn-login" type="submit">Modifier</button>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+        </td>
+    </tr>
+</table>
 </body>
 </html>

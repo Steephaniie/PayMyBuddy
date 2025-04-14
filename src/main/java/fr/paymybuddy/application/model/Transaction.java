@@ -5,6 +5,12 @@ import lombok.Getter;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.Digits;
+
+
+import java.math.BigDecimal;
 
 /**
  * Représente une transaction monétaire entre deux utilisateurs.
@@ -38,24 +44,6 @@ public class Transaction {
     private Long id;
 
     /**
-     * Méthode simulée pour journaliser des actions après la création ou la mise à jour d'une transaction.
-     */
-    @PostPersist
-    @PostUpdate
-    private void logTransactionDetails() {
-        logger.info("Transaction effectuée avec succès : ID={}, Émetteur={}, Récepteur={}, Montant={} EUR", id, sender.getUsername(), receiver.getUsername(), amount);
-        logger.debug("Informations détaillées concernant la transaction : {}", this);
-    }
-
-    /**
-     * Méthode simulée pour signaler une erreur si une exception d'événement est détectée (placeholder).
-     */
-    @PreRemove
-    private void logTransactionError() {
-        logger.error("Erreur potentielle : Tentative de suppression de la transaction avec ID={}", id);
-    }
-
-    /**
      * L'utilisateur qui envoie les fonds dans la transaction.
      * <p>
      * Relation ManyToOne avec la classe {@link User}. Chaque transaction est liée
@@ -85,7 +73,11 @@ public class Transaction {
      * </p>
      */
     @Column(nullable = false)
-    private double amount;
+    @DecimalMin("0.00")
+    @DecimalMax("9999999.99")
+    @Digits(integer=7, fraction=2)
+
+    private BigDecimal amount;
 
     /**
      * Description facultative pour la transaction.

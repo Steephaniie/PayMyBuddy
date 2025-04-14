@@ -4,7 +4,7 @@ CREATE TABLE transactions
     id            BIGINT NOT NULL AUTO_INCREMENT,              -- Identifiant unique pour chaque transaction
     sender_id     BIGINT NOT NULL,              -- Identifiant de l'utilisateur envoyant l'argent
     receiver_id   BIGINT NOT NULL,              -- Identifiant de l'utilisateur recevant l'argent
-    amount DOUBLE NOT NULL,                     -- Montant de la transaction
+    amount        DECIMAL(7,2) NOT NULL,                     -- Montant de la transaction
     `description` VARCHAR(255) NULL,            -- Description facultative de la transaction
     CONSTRAINT pk_transactions PRIMARY KEY (id) -- Définition de la clé primaire sur le champ 'id'
 );
@@ -16,6 +16,7 @@ CREATE TABLE users
     username VARCHAR(255) NULL,          -- Nom d'utilisateur (facultatif)
     password VARCHAR(255) NULL,          -- Mot de passe de l'utilisateur (facultatif)
     email    VARCHAR(255) NULL,          -- Adresse email de l'utilisateur (facultatif)
+    solde    DECIMAL(7,2) NOT NULL,
     CONSTRAINT pk_users PRIMARY KEY (id) -- Définition de la clé primaire sur le champ 'id'
 );
 
@@ -28,7 +29,7 @@ CREATE TABLE users_connections
 
 -- Ajout d'une contrainte pour assurer l'unicité des connexions dans la table 'users_connections'
 ALTER TABLE users_connections
-    ADD CONSTRAINT uc_users_connections_connections UNIQUE (connections_id);
+    ADD CONSTRAINT uc_users_connections_connections UNIQUE (connections_id,user_id);
 
 -- Ajout d'une contrainte de clé étrangère pour relier 'receiver_id' dans la table 'transactions' à 'id' dans 'users'
 ALTER TABLE transactions

@@ -15,24 +15,30 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class TransfererController {
-    private static final Logger logger = LoggerFactory.getLogger(TransactionController.class);
+    private static final Logger logger = LoggerFactory.getLogger(TransfererController.class);
 
     private final TransactionService transactionService;
     private final UserService userService;
 
+    @GetMapping("/")
+    public String goHome(@AuthenticationPrincipal User userConnecte, Model model) {
+        return viewTransactionsBySender(userConnecte, model);
+    }
     @GetMapping("/transferer")
     public String viewTransactionsBySender(@AuthenticationPrincipal User userConnecte, Model model) {
         logger.debug("Récupération des transactions pour la vue Thymeleaf de l'utilisateur : {}", userConnecte.getUsername());
         try {
-            List<TransactionDTO> transactions = transactionService.findTransactionsBySender(userConnecte.getId());
+            List<TransactionDTO> transactions = transactionService.findMesTransactions(userConnecte);
             List<UserDTO> contacts = userService.getContacts(userConnecte); // Récupération des contacts
+            User user= userService.getById(userConnecte.getId());
+            model.addAttribute("solde", user.getUsername() + " solde=" +user.getSolde()+"€"); // Ajout des contacts au modèle
             model.addAttribute("contacts", contacts); // Ajout des contacts au modèle
-
             model.addAttribute("transactions", transactions);
             model.addAttribute("username", userConnecte.getUsername()); // Optionnel pour afficher le nom de l'utilisateur
             return "Transferer"; // Le nom de la page Thymeleaf à afficher (transactions.html)
@@ -45,21 +51,26 @@ public class TransfererController {
     public String payer(@AuthenticationPrincipal User userConnecte, Model model,
         @RequestParam Long id_contact,
         @RequestParam String description,
-        @RequestParam double montant
+        @RequestParam BigDecimal montant
     ) {
             logger.debug("Début du traitement de la transaction pour l'utilisateur : {}", userConnecte.getUsername());
-            try {
-              transactionService.createTransaction(
+                TransactionService.TransactionResult retour = transactionService.createTransaction(
                         userConnecte,
                         id_contact,
                         montant,
                         description
                 );
-                logger.info("Transaction créée avec succès pour l'utilisateur : {}", userConnecte.getUsername());
+
+                if (retour.isSuccess()) {
+                    model.addAttribute("message","Transaction réalisée avec succès");
+                    logger.info("Transaction créée avec succès pour l'utilisateur : {}", userConnecte.getUsername());
+                }
+                else {
+                    model.addAttribute("message",retour.getMessage());
+                    logger.error("Une erreur est survenue lors de la création de la transaction pour l'utilisateur : {} {}",
+                            userConnecte.getUsername()
+                            ,retour.getMessage());
+                }
                return viewTransactionsBySender(userConnecte, model);
-            } catch (Exception e) {
-                logger.error("Une erreur est survenue lors de la création de la transaction pour l'utilisateur : {}", userConnecte.getUsername(), e);
-                return "error"; // Redirection vers une page d'erreur si nécessaire
-            }
     }
 }

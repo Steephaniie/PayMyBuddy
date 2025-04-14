@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -58,7 +59,7 @@ class TransactionServiceTest {
         transaction1.setSender(sender);
         transaction1.setReceiver(receiver);
         transaction1.setDescription("Payment for services");
-        transaction1.setAmount(100.0);
+        transaction1.setAmount(new BigDecimal("100.0"));
         when(transactionRepository.findBySender_Id(sender.getId())).thenReturn(List.of(transaction1));
 
         // Act : Exécuter la méthode testée
@@ -90,29 +91,79 @@ class TransactionServiceTest {
         // Arrange : Préparer les données nécessaires au test
         User sender = new User();
         sender.setId(1L);
-//        sender.setBalance(100.0); // Solde du compte émetteur
+        sender.setSolde(new BigDecimal("100")); // Solde du compte émetteur
 
         Long receiverId = 2L;
         User receiver = new User();
         receiver.setId(receiverId); // Identifiant du destinataire
+        receiver.setSolde(new BigDecimal("100")); // Solde du compte émetteur
 
-        double amount = 50.0; // Somme à transférer
+        BigDecimal amount = new BigDecimal("50"); // Somme à transférer
         String description = "Payment for services"; // Description de la transaction
 
         when(userService.getById(sender.getId())).thenReturn(sender);
         when(userService.getById(receiverId)).thenReturn(receiver);
         when(transactionRepository.save(any(Transaction.class))).thenAnswer(i -> i.getArgument(0));
 
+        new TransactionService.TransactionResult(true, "Votre message ici");
+
         // Act : Exécuter la méthode testée
-        Boolean result = transactionService.createTransaction(sender, receiverId, amount, description);
+        TransactionService.TransactionResult result = transactionService.createTransaction(sender, receiverId, amount, description);
 
         // Assert : Vérifier les résultats et s'assurer qu'ils correspondent aux attentes
-        assertTrue(result);
-//        assertEquals(50.0, sender.getBalance());
+        assertTrue(result.isSuccess());
         verify(userService, times(1)).getById(sender.getId());
         verify(userService, times(1)).getById(receiverId);
         verify(transactionRepository, times(1)).save(any(Transaction.class));
     }
+    @Test
+    void testFindMesTransactions_Success() {
+        // Préparer les données de test
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("user1");
 
+        User receiver = new User();
+        receiver.setId(2L);
+        receiver.setUsername("user2");
+
+        Transaction sentTransaction = new Transaction();
+        sentTransaction.setSender(user);
+        sentTransaction.setReceiver(receiver);
+        sentTransaction.setAmount(BigDecimal.valueOf(50));
+        sentTransaction.setDescription("Payment to receiver");
+
+        Transaction receivedTransaction = new Transaction();
+        receivedTransaction.setSender(receiver);
+        receivedTransaction.setReceiver(user);
+        receivedTransaction.setAmount(BigDecimal.valueOf(30));
+        receivedTransaction.setDescription("Refund from receiver");
+
+        List<Transaction> transactions = List.of(sentTransaction, receivedTransaction);
+
+        // Configurer les comportements du mock repository
+        when(transactionRepository.findBySenderOrReceiver(user, user)).thenReturn(transactions);
+
+        // Lancer la méthode testée
+        List<TransactionDTO> results = transactionService.findMesTransactions(user);
+
+        // Vérifier les résultats
+        assertNotNull(results);
+        assertEquals(2, results.size());
+
+        // Vérifier le détail des DTO retournés
+        TransactionDTO dto1 = results.get(0); // Transaction envoyée
+        assertEquals("user2", dto1.getReceiverName()); // Nom du receiver
+        assertEquals(BigDecimal.valueOf(-50.00).setScale(2), dto1.getAmount().setScale(2)); // Montant négatif
+        assertEquals("Payment to receiver", dto1.getDescription());
+
+        TransactionDTO dto2 = results.get(1); // Transaction reçue
+        assertEquals("user2", dto2.getReceiverName()); // Nom du sender
+        assertEquals(BigDecimal.valueOf(30.00).setScale(2), dto2.getAmount().setScale(2)); // Montant positif
+        assertEquals("Refund from receiver", dto2.getDescription());
+
+        // Vérification des interactions
+        verify(transactionRepository, times(1)).findBySenderOrReceiver(user, user);
+    }
 
 }

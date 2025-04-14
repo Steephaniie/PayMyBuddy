@@ -1,0 +1,117 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TransactionRepository</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">fr.paymybuddy.application.repository</a>
+</div>
+
+<h1>Coverage Summary for Class: TransactionRepository (fr.paymybuddy.application.repository)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+</tr>
+  <tr>
+    <td class="name">TransactionRepository$MockitoMock$BqmV9O8T</td>
+  </tr>
+  <tr>
+    <td class="name">TransactionRepository$MockitoMock$BqmV9O8T$auxiliary$sHnfva0E</td>
+  </tr>
+  <tr>
+    <td class="name">TransactionRepository$MockitoMock$BqmV9O8T$auxiliary$WWSJ6DbK</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package fr.paymybuddy.application.repository;
+&nbsp;
+&nbsp;import fr.paymybuddy.application.model.Transaction;
+&nbsp;import fr.paymybuddy.application.model.User;
+&nbsp;import org.springframework.data.jpa.repository.JpaRepository;
+&nbsp;import org.springframework.stereotype.Repository;
+&nbsp;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Repository
+&nbsp;public interface TransactionRepository extends JpaRepository&lt;Transaction, Long&gt; {
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Récupère toutes les transactions envoyées par un utilisateur spécifique.
+&nbsp;     *
+&nbsp;     * @param senderId l&#39;identifiant de l&#39;utilisateur expéditeur
+&nbsp;     * @return une liste de transactions envoyées par l&#39;utilisateur
+&nbsp;     */
+&nbsp;    List&lt;Transaction&gt; findBySender_Id(Long senderId);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Récupère toutes les transactions reçues par un utilisateur spécifique.
+&nbsp;     *
+&nbsp;     * @param receiverId l&#39;identifiant de l&#39;utilisateur destinataire
+&nbsp;     * @return une liste de transactions reçues par l&#39;utilisateur
+&nbsp;     */
+&nbsp;    List&lt;Transaction&gt; findByReceiver_Id(Long receiverId);
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Récupère une liste de transactions pour lesquelles l&#39;utilisateur spécifié
+&nbsp;     * est soit l&#39;émetteur soit le récepteur.
+&nbsp;     *
+&nbsp;     * @param user le premier utilisateur impliqué dans la transaction,
+&nbsp;     *             qui peut être l&#39;émetteur ou le récepteur
+&nbsp;     * @param user1 le deuxième utilisateur impliqué dans la transaction,
+&nbsp;     *              qui peut être l&#39;émetteur ou le récepteur
+&nbsp;     * @return une liste d&#39;objets Transaction correspondant aux critères spécifiés
+&nbsp;     */
+&nbsp;    List&lt;Transaction&gt; findBySenderOrReceiver(User user, User user1);
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-04-13 17:30</div>
+</div>
+</body>
+</html>

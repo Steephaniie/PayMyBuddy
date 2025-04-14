@@ -38,8 +38,6 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // Associe le service d'utilisateurs personnalisé
-                .userDetailsService(customUserDetailsService)
                 // Définit les règles d'autorisation
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/register/**").permitAll() // Accès public pour s'enregistrer
@@ -52,6 +50,8 @@ public class SecurityConfiguration {
                         .defaultSuccessUrl("/transferer", true) // Redirection après succès
                         .permitAll()
                 )
+                // Associe le service d'utilisateurs personnalisé
+                .userDetailsService(customUserDetailsService)
                 // Configure la déconnexion
                 .logout(logout -> logout
                         .logoutUrl("/logout") // URL pour la déconnexion

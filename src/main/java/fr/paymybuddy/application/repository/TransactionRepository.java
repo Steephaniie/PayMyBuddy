@@ -1,6 +1,7 @@
 package fr.paymybuddy.application.repository;
 
 import fr.paymybuddy.application.model.Transaction;
+import fr.paymybuddy.application.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -26,10 +27,14 @@ public interface TransactionRepository extends JpaRepository<Transaction, Long> 
     List<Transaction> findByReceiver_Id(Long receiverId);
 
     /**
-     * Récupère toutes les transactions où l'utilisateur donné est soit l'expéditeur soit le destinataire.
+     * Récupère une liste de transactions pour lesquelles l'utilisateur spécifié
+     * est soit l'émetteur soit le récepteur.
      *
-     * @param userId1 l'identifiant de l'utilisateur concerné
-     * @return une liste de transactions impliquant l'utilisateur
+     * @param user le premier utilisateur impliqué dans la transaction,
+     *             qui peut être l'émetteur ou le récepteur
+     * @param user1 le deuxième utilisateur impliqué dans la transaction,
+     *              qui peut être l'émetteur ou le récepteur
+     * @return une liste d'objets Transaction correspondant aux critères spécifiés
      */
-    List<Transaction> findBySender_IdOrReceiver_Id(Long userId1, Long userId2);
+    List<Transaction> findBySenderOrReceiver(User user, User user1);
 }

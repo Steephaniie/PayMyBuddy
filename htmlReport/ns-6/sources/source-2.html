@@ -1,0 +1,306 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > TransactionService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">fr.paymybuddy.application.service</a>
+</div>
+
+<h1>Coverage Summary for Class: TransactionService (fr.paymybuddy.application.service)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">TransactionService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    61,1%
+  </span>
+  <span class="absValue">
+    (11/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (45/60)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">TransactionService$$SpringCGLIB$$0</td>
+  </tr>
+  <tr>
+    <td class="name">TransactionService$TransactionResult</td>
+  </tr>
+<tr>
+  <td class="name"><strong>Total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    61,1%
+  </span>
+  <span class="absValue">
+    (11/18)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    75%
+  </span>
+  <span class="absValue">
+    (45/60)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package fr.paymybuddy.application.service;
+&nbsp;
+&nbsp;import fr.paymybuddy.application.dto.TransactionDTO;
+&nbsp;import fr.paymybuddy.application.model.Transaction;
+&nbsp;import fr.paymybuddy.application.model.User;
+&nbsp;import fr.paymybuddy.application.repository.TransactionRepository;
+&nbsp;import fr.paymybuddy.application.repository.UserRepository;
+&nbsp;import lombok.AllArgsConstructor;
+&nbsp;import lombok.Getter;
+&nbsp;import lombok.RequiredArgsConstructor;
+&nbsp;import lombok.extern.slf4j.Slf4j;
+&nbsp;import org.springframework.stereotype.Service;
+&nbsp;import org.springframework.transaction.annotation.Transactional;
+&nbsp;
+&nbsp;import java.math.BigDecimal;
+&nbsp;import java.math.RoundingMode;
+&nbsp;import java.util.List;
+&nbsp;
+&nbsp;@Service
+<b class="fc">&nbsp;@Slf4j // lombok fournit automatiquement la logique pour logger avec SLF4J</b>
+&nbsp;@RequiredArgsConstructor
+&nbsp;@Transactional
+&nbsp;public class TransactionService {
+&nbsp;
+&nbsp;    private final TransactionRepository transactionRepository;
+&nbsp;    private final UserService userService;
+&nbsp;    private final UserRepository userRepository;
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Récupère toutes les transactions envoyées par un utilisateur spécifique
+&nbsp;     * et les convertit en objets TransactionDTO pour une utilisation optimisée dans les vues ou l&#39;API.
+&nbsp;     *
+&nbsp;     * @param senderId l&#39;identifiant unique de l&#39;utilisateur expéditeur
+&nbsp;     * @return une liste de TransactionDTO représentant les transactions envoyées
+&nbsp;     */
+&nbsp;    public List&lt;TransactionDTO&gt; findTransactionsBySender(Long senderId) {
+&nbsp;        // Journalisation DEBUG pour début de traitement
+<b class="fc">&nbsp;        log.debug(&quot;Début de la recherche des transactions pour l&#39;identifiant de l&#39;expéditeur (senderId) : {}&quot;, senderId);</b>
+&nbsp;
+&nbsp;        // Récupérer la liste des transactions
+<b class="fc">&nbsp;        List&lt;Transaction&gt; transactions = transactionRepository.findBySender_Id(senderId);</b>
+&nbsp;
+&nbsp;        // Journalisation INFO pour action réussie
+<b class="fc">&nbsp;        log.info(&quot;Transactions récupérées avec succès pour l&#39;identifiant de l&#39;expéditeur (senderId) : {}&quot;, senderId);</b>
+&nbsp;
+&nbsp;        // Transformer chaque transaction en DTO
+<b class="fc">&nbsp;        return transactions.stream()</b>
+<b class="fc">&nbsp;                .map(transaction -&gt; new TransactionDTO(</b>
+<b class="fc">&nbsp;                        transaction.getReceiver().getUsername(),</b>
+<b class="fc">&nbsp;                        transaction.getDescription(),</b>
+<b class="fc">&nbsp;                        transaction.getAmount()</b>
+&nbsp;                ))
+<b class="fc">&nbsp;                .toList(); // Retourner une liste de DTOs</b>
+&nbsp;    }
+&nbsp;    public List&lt;TransactionDTO&gt; findMesTransactions(User user) {
+&nbsp;        // Journalisation DEBUG pour début de traitement
+<b class="fc">&nbsp;        log.debug(&quot;Début de la recherche des transactions pour l&#39;identifiant de l&#39;expéditeur : {}&quot;, user.getId());</b>
+&nbsp;
+&nbsp;        // Récupérer la liste des transactions
+<b class="fc">&nbsp;        List&lt;Transaction&gt; transactions = transactionRepository.findBySenderOrReceiver(user,user);</b>
+&nbsp;
+&nbsp;        // Transformer chaque transaction en DTO
+<b class="fc">&nbsp;        return transactions.stream()</b>
+<b class="fc">&nbsp;                .map(transaction -&gt; {</b>
+&nbsp;                    // Vérifier si l&#39;utilisateur est le sender ou le receiver
+<b class="fc">&nbsp;                    boolean isSender = transaction.getSender().getId().equals(user.getId());</b>
+<b class="fc">&nbsp;                    boolean isReceiver = transaction.getReceiver().getId().equals(user.getId());</b>
+&nbsp;
+&nbsp;                    // Détermine le montant en fonction du rôle
+<b class="fc">&nbsp;                    BigDecimal amount = isSender</b>
+<b class="fc">&nbsp;                            ? transaction.getAmount().negate() // Montant négatif si l&#39;utilisateur est l&#39;expéditeur</b>
+<b class="fc">&nbsp;                            : transaction.getAmount(); // Montant positif si l&#39;utilisateur est le destinataire</b>
+&nbsp;
+&nbsp;                    // Détermine le &quot;receiver&quot; dans le DTO
+<b class="fc">&nbsp;                    String receiverName = isReceiver</b>
+<b class="fc">&nbsp;                            ? transaction.getSender().getUsername() // Si je suis le destinataire, on met le nom de l&#39;expéditeur</b>
+<b class="fc">&nbsp;                            : transaction.getReceiver().getUsername(); // Si je suis l&#39;expéditeur, on met le nom du destinataire</b>
+&nbsp;
+&nbsp;                    // Créer et retourner le DTO
+<b class="fc">&nbsp;                    return new TransactionDTO(</b>
+&nbsp;                            receiverName, // Nom affiché
+<b class="fc">&nbsp;                            transaction.getDescription(),</b>
+&nbsp;                            amount
+&nbsp;                    );
+&nbsp;                })
+<b class="fc">&nbsp;                .toList(); // Retourner une liste de DTOs</b>
+&nbsp;    }
+&nbsp;
+&nbsp;
+&nbsp;    /**
+&nbsp;     * Valide les données et crée une nouvelle transaction entre un expéditeur et un destinataire.
+&nbsp;     * Cette méthode vérifie plusieurs conditions comme la présence des utilisateurs,
+&nbsp;     * un montant valide et initialise ensuite l&#39;objet Transaction avant de le sauvegarder.
+&nbsp;     *
+&nbsp;     * @param sender      l&#39;utilisateur qui initie la transaction (expéditeur)
+&nbsp;     * @param receiver    l&#39;identifiant de l&#39;utilisateur qui reçoit la transaction (destinataire)
+&nbsp;     * @param amount      le montant de la transaction, qui doit être strictement supérieur à zéro
+&nbsp;     * @param description une description facultative de la transaction (par exemple, motif du paiement)
+&nbsp;     * @return true si la transaction est créée et sauvegardée avec succès
+&nbsp;     * @throws IllegalArgumentException si les utilisateurs ou le montant sont invalides
+&nbsp;     */
+&nbsp;    @Transactional
+&nbsp;    public TransactionResult createTransaction(User sender, Long receiver, BigDecimal amount, String description) {
+&nbsp;        // Validation business logic de base
+&nbsp;        try {
+<b class="fc">&nbsp;            log.debug(&quot;Début de la création de la transaction pour l&#39;expéditeur (senderId) : {}, destinataire (receiverId) : {}, montant : {}&quot;,</b>
+<b class="pc">&nbsp;                    sender != null ? sender.getId() : &quot;null&quot;, receiver, amount);</b>
+&nbsp;
+<b class="pc">&nbsp;            if (sender == null || receiver == null) {</b>
+<b class="nc">&nbsp;                String errorMessage = &quot;La transaction nécessite un expéditeur et un destinataire.&quot;;</b>
+<b class="nc">&nbsp;                log.error(&quot;Paramètres invalides : &quot; + errorMessage);</b>
+<b class="nc">&nbsp;                return new TransactionResult(false, errorMessage);</b>
+&nbsp;            }
+&nbsp;
+<b class="fc">&nbsp;            User userDestinataire = userService.getById(receiver);</b>
+<b class="fc">&nbsp;            User userConecte = userService.getById(sender.getId());</b>
+<b class="pc">&nbsp;            if (userDestinataire == null || userConecte == null) {</b>
+<b class="nc">&nbsp;                String errorMessage = &quot;L&#39;un des utilisateurs spécifiés est introuvable dans la base de données.&quot;;</b>
+<b class="nc">&nbsp;                log.error(errorMessage + &quot; (senderId : {}, receiverId : {})&quot;, sender.getId(), receiver);</b>
+<b class="nc">&nbsp;                return new TransactionResult(false, errorMessage);</b>
+&nbsp;            }
+&nbsp;
+<b class="pc">&nbsp;            if (amount.compareTo(BigDecimal.ZERO) &lt;= 0) {</b>
+<b class="nc">&nbsp;                String errorMessage = &quot;Le montant de la transaction doit être supérieur à zéro.&quot;;</b>
+<b class="nc">&nbsp;                log.error(&quot;Montant invalide pour la transaction : senderId = {}, receiverId = {}, montant = {}&quot;, sender.getId(), receiver, amount);</b>
+<b class="nc">&nbsp;                return new TransactionResult(false, errorMessage);</b>
+&nbsp;            }
+&nbsp;
+<b class="pc">&nbsp;            if (amount.compareTo(userConecte.getSolde()) &gt; 0) {</b>
+<b class="nc">&nbsp;                String errorMessage = &quot;Transaction impossible -  le solde disponible est de &quot; + userConecte.getSolde().setScale(2, RoundingMode.HALF_UP) + &quot; €.&quot;;</b>
+<b class="nc">&nbsp;                log.error(errorMessage + &quot; senderId = {}&quot;, sender.getId());</b>
+<b class="nc">&nbsp;                return new TransactionResult(false, errorMessage);</b>
+&nbsp;            }
+&nbsp;
+&nbsp;            // Soustraire du solde de l&#39;expéditeur et sauvegarder
+<b class="fc">&nbsp;            userConecte.setSolde(userConecte.getSolde().subtract(amount));</b>
+<b class="fc">&nbsp;            userRepository.save(userConecte);</b>
+&nbsp;
+&nbsp;            // Ajouter au solde du destinataire et sauvegarder
+<b class="fc">&nbsp;            userDestinataire.setSolde(userDestinataire.getSolde().add(amount));</b>
+<b class="fc">&nbsp;            userRepository.save(userDestinataire);</b>
+&nbsp;
+&nbsp;            // Sauvegarder la transaction
+<b class="fc">&nbsp;            Transaction transaction = new Transaction();</b>
+<b class="fc">&nbsp;            transaction.setSender(userConecte);</b>
+<b class="fc">&nbsp;            transaction.setReceiver(userDestinataire);</b>
+<b class="fc">&nbsp;            transaction.setAmount(amount);</b>
+<b class="fc">&nbsp;            transaction.setDescription(description);</b>
+<b class="fc">&nbsp;            transactionRepository.save(transaction);</b>
+&nbsp;
+&nbsp;            // Succès
+<b class="fc">&nbsp;            log.info(&quot;Transaction créée avec succès : senderId = {}, receiverId = {}, montant = {}&quot;, sender.getId(), receiver, amount);</b>
+<b class="fc">&nbsp;            return new TransactionResult(true, &quot;La transaction a été créée avec succès.&quot;);</b>
+&nbsp;        } catch (Exception e) {
+<b class="nc">&nbsp;            String errorMessage = &quot;Une erreur inattendue est survenue : &quot; + e.getMessage();</b>
+<b class="nc">&nbsp;            log.error(errorMessage, e);</b>
+<b class="nc">&nbsp;            return new TransactionResult(false, errorMessage);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    @Getter
+&nbsp;    @AllArgsConstructor
+&nbsp;    public static class TransactionResult {
+&nbsp;        private final boolean success;
+&nbsp;        private final String message;
+&nbsp;    }
+&nbsp;
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-04-13 17:30</div>
+</div>
+</body>
+</html>

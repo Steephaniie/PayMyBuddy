@@ -1,28 +1,89 @@
-<!DOCTYPE html> <!-- Déclaration du type de document (HTML5) -->
-<html xmlns:th="http://www.thymeleaf.org" lang="fr"> <!-- Définition de l'espace de noms Thymeleaf et la langue -->
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8"> <!-- Définition de l'encodage des caractères -->
-    <title>Ajouter un Contact</title> <!-- Titre de la page -->
-    <link rel="stylesheet" href="/css/style.css"> <!-- Chemin vers une feuille de styles personnalisée -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        .btn {
+            display: block; /* Affichage en bloc */
+            width: 100px; /* Largeur fixe pour uniformiser */
+            margin: 10px; /* Marge automatique pour centrer */
+            padding: 10px; /* Espacement interne */
+            font-size: 16px; /* Taille de la police */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Suppression du soulignement */
+            color: white; /* Couleur du texte */
+        }
+
+        /* Style spécifique au bouton de connexion */
+        .btn-login {
+            background-color: #4CAF50; /* Couleur verte pour Connexion */
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+    </style>
 </head>
 <body>
-<div class="container"> <!-- Contenant principal de la page -->
-    <h1>Ajouter un Contact</h1> <!-- Titre principal de la page -->
+<table style="width: 930px;margin-left: 20px;">
+    <tr>
+        <td style="width: 500px;">
+            <h3> Pay My Buddy</h3>
+        </td>
+        <td>
+            <a th:href="@{/transferer}">Transférer</a><br>
+        </td>
+        <td>
+            <a th:href="@{/profil}">Profil</a><br>
+        </td>
+        <td>
+            <a th:href="@{/contact}">Ajouter relation</a><br>
+        </td>
+        <td>
+            <a th:href="@{/logout}">Se déconnecter</a><br>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="5">
+            <br><br><br>
+            <form action="/contact" method="post">
+                <table style=" margin-left: 150px;">
+                    <tr>
+                        <td style="width: 250px;">
+                            <label for="email">Chercher une relation</label> <!-- Champ de saisie pour l'adresse e-mail -->
+                            <input maxlength="250" style="width: 300px" type="email" id="email" name="email" placeholder="Saisir une adresse mail" required>
+                            <div th:if="${error}" class="error" th:text="${error}"></div>
+                            <div th:if="${succes}" class="error" th:text="${succes}"></div>
+                        </td>
+                        <td  style="width: 200px;">
+                            <button class="btn btn-login" type="submit">Ajouter</button> <!-- Bouton pour valider le formulaire -->
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
 
-    <!-- Affichage du message de bienvenue pour l'utilisateur connecté -->
-    <p th:text="'Bonjour ' + ${username} + ','">Bonjour, utilisateur</p>
-
-    <!-- 
-    Formulaire permettant d'ajouter un contact.
-    L'utilisateur doit saisir une adresse e-mail valide pour rechercher et ajouter une relation.
-    Le formulaire est soumis via une requête POST à l'URL "/api/user/contact".
-    -->
-    <form action="/api/user/contact" method="post">
-        <label for="email">Chercher une relation :</label> <!-- Champ de saisie pour l'adresse e-mail -->
-        <input type="email" id="email" name="email" placeholder="Saisir une adresse mail" required>
-        <!-- Champ de saisie -->
-        <button type="submit">Ajouter</button> <!-- Bouton pour valider le formulaire -->
-    </form>
-</div>
+            </form>
+        </td>
+    </tr>
+</table>
 </body>
 </html>
