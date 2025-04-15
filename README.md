@@ -18,7 +18,7 @@ PayMyBuddy est une application web de transferts d'argents qui permet aux utilis
 - Marven : Outil de build automatisé.
 - Thymeleaf : Moteur de template pour la génération de pages HTML.
 - JUnit 5 et Mockito : pour les tests
-- Surefire et JaCoCo : pour l'exécution des tests 
+- WAVE : pour tester l'accessibilité d'une page web 
 - Log4J pour la gestion des logs 
 
 
