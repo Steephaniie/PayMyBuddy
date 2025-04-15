@@ -22,7 +22,11 @@ public class UserController {
     private final UserService userService;
 
     /**
-     * Affiche le formulaire de profil de l'utilisateur connecté.
+     * Affiche le formulaire de profil de l'utilisateur actuellement connecté.
+     *
+     * @param userConnecte L'utilisateur actuellement connecté.
+     * @param model        Modèle permettant de transmettre les détails du profil à la vue.
+     * @return Le nom de la vue `Profil.html` affichant les détails du profil.
      */
     @GetMapping("/profil")
     public String getUserProfile(@AuthenticationPrincipal User userConnecte, Model model) {
@@ -38,6 +42,13 @@ public class UserController {
 
     /**
      * Met à jour le profil de l'utilisateur connecté.
+     *
+     * @param userConnecte L'utilisateur connecté actuellement authentifié.
+     * @param username     Le nouveau nom d'utilisateur.
+     * @param email        Le nouvel email de l'utilisateur.
+     * @param password     Le nouveau mot de passe.
+     * @param model        Modèle permettant de transmettre des attributs à la vue.
+     * @return Le nom de la vue `Profil.html` après mise à jour.
      */
     @PostMapping("/profil")
     public String updateUserProfile(
@@ -69,9 +80,9 @@ public class UserController {
     /**
      * Affiche la page contenant le formulaire d'ajout d'un nouveau contact.
      *
-     * @param userConnecte  L'utilisateur actuellement connecté.
-     * @param model L'objet modèle pour passer des attributs à la vue.
-     * @return Le nom de la vue `Contact.html`.
+     * @param userConnecte L'utilisateur actuellement connecté.
+     * @param model        Modèle permettant de transmettre des données à la vue.
+     * @return Le nom de la vue `Contact.html` affichant le formulaire.
      */
     @GetMapping("/contact")
     public String showAddContactPage(@AuthenticationPrincipal User userConnecte, Model model) {
@@ -87,10 +98,10 @@ public class UserController {
     /**
      * Ajoute un nouvel utilisateur à la liste des contacts de l'utilisateur connecté.
      *
-     * @param userConnecte  L'utilisateur actuellement authentifié, fourni par Spring Security.
-     * @param email L'adresse email de l'utilisateur à ajouter comme contact.
-     * @return Une réponse HTTP contenant l'objet UserDTO correspondant au contact ajouté,
-     * ou un statut HTTP 404 si le contact n'a pas pu être trouvé.
+     * @param userConnecte L'utilisateur actuellement connecté et authentifié.
+     * @param email        Adresse email du contact à ajouter.
+     * @param model        Modèle permettant de transmettre des messages d'erreur ou de succès à la vue.
+     * @return Le nom de la vue `Contact.html` avec la liste mise à jour ou un message d'erreur.
      */
     @PostMapping("/contact")
     public String addContact(

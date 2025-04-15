@@ -45,24 +45,33 @@
             color: white; /* Couleur du texte */
         }
 
-        /* Style générique pour les boutons */
         .logo {
             display: block; /* Affichage en bloc */
-            width: 150px; /* Largeur fixe pour uniformiser */
+            width: 250px; /* Largeur fixe pour uniformiser */
             margin: 10px auto; /* Marge automatique pour centrer */
             padding: 10px; /* Espacement interne */
-            font-size: 16px; /* Taille de la police */
+            font-size: 30px; /* Taille de la police */
             border: none; /* Suppression de la bordure par défaut */
             border-radius: 5px; /* Coins arrondis */
             cursor: pointer; /* Modifie le curseur au survol */
             text-decoration: none; /* Suppression du soulignement */
             color: white; /* Couleur du texte */
-            background-color: #4CAF50; /* Couleur verte pour Connexion */
+            background-color: #b35500; /* Orange foncé pour meilleur contraste */
         }
 
         /* Style spécifique au bouton de connexion */
         .btn-login {
-            background-color: #4CAF50; /* Couleur verte pour Connexion */
+            display: block; /* Affichage en bloc pour uniformiser */
+            width: 150px; /* Largeur fixe pour uniformiser */
+            margin: 10px auto; /* Centrer horizontalement */
+            padding: 10px; /* Espacement interne */
+            font-size: 18px; /* Taille de la police compatible large */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Supprime le soulignement */
+            color: white; /* Couleur du texte */
+            background-color: #1558b0; /* Bleu foncé pour un meilleur contraste */
         }
 
         /* Style spécifique au bouton d'enregistrement */
@@ -74,6 +83,20 @@
         .btn:hover {
             opacity: 0.9; /* Légère transparence pour effet visuel */
         }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -83,17 +106,25 @@
     <!-- Formulaire d'inscription avec action liée à l'URL /register -->
     <form th:action="@{/login}" method="post">
         <div class="form-group">
-            <!-- Champ pour le nom d'utilisateur -->
-            <input maxlength="250" type="text" id="username" name="username" placeholder="Mail"required/>
+            <!-- Ajout d'un label pour le champ du nom d'utilisateur -->
+            <label for="username">
+                Adresse e-mail
+            </label>
+            <input maxlength="250" type="text" id="username" name="username" placeholder="Entrez votre e-mail" required
+                   aria-required="true"/>
         </div>
         <br>
         <div class="form-group">
-            <!-- Champ pour le mot de passe -->
-            <input maxlength="250" type="password" id="password" name="password" placeholder="Mot de passe" required/>
+            <!-- Ajout d'un label pour le champ du mot de passe -->
+            <label for="password">
+                Mot de passe
+            </label>
+            <input maxlength="250" type="password" id="password" name="password" placeholder="Entrez votre mot de passe"
+                   required aria-required="true"/>
         </div>
         <br>
         <!-- Bouton pour soumettre le formulaire -->
-        <button  class="btn btn-login"  type="submit">Se connecter</button>
+        <button class="btn btn-login" type="submit">Se connecter</button>
     </form>
     <!-- Message en cas d'erreur de connexion -->
     <div th:if="${param.error}" class="error">Nom d'utilisateur ou mot de passe incorrect.</div>

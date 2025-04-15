@@ -15,20 +15,10 @@
             border-collapse: collapse;
             margin-top: 20px;
         }
-
-
-        th, td {
-            padding: 10px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f4f4f4;
-        }
         .btn {
             display: block; /* Affichage en bloc */
-            width: 100px; /* Largeur fixe pour uniformiser */
-            margin: 10px; /* Marge automatique pour centrer */
+            width: 140px; /* Largeur fixe pour uniformiser */
+            margin: 10px auto; /* Marge automatique pour centrer */
             padding: 10px; /* Espacement interne */
             font-size: 16px; /* Taille de la police */
             border: none; /* Suppression de la bordure par défaut */
@@ -39,15 +29,48 @@
         }
 
         /* Style spécifique au bouton de connexion */
+        /* Style spécifique au bouton de connexion */
         .btn-login {
-            background-color: #4CAF50; /* Couleur verte pour Connexion */
+            display: block; /* Affichage en bloc pour uniformiser */
+            width: 150px; /* Largeur fixe pour uniformiser */
+            margin: 10px ; /* Centrer horizontalement */
+            padding: 10px; /* Espacement interne */
+            font-size: 18px; /* Taille de la police compatible large */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Supprime le soulignement */
+            color: white; /* Couleur du texte */
+            background-color: #1558b0; /* Bleu foncé pour un meilleur contraste */
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+        select,input {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
 <table style="width: 930px;margin-left: 20px;">
     <tr>
-        <td style="width: 500px;" >
+        <td style="width: 450px;" >
             <h3 th:title="${solde}">Pay My Buddy</h3>
         </td>
         <td>
@@ -56,8 +79,8 @@
         <td>
             <a th:href="@{/profil}">Profil</a><br>
         </td>
-        <td>
-            <a th:href="@{/contact}">Ajouter relation</a><br>
+        <td style="width: 117px">
+            <a th:href="@{/contact}" >Ajouter relation</a><br>
         </td>
         <td>
             <a th:href="@{/logout}">Se déconnecter</a><br>
@@ -70,8 +93,11 @@
                     <tr>
                         <td style="width: 250px;">
                             <!-- Liste déroulante des contacts -->
+                            <label for="id_contact">
+                                Selectionner une relation
+                            </label>
                             <select id="id_contact" name="id_contact">
-                                <option value="" disabled>Selectionner une relation</option>
+<!--                                <option value="" disabled>Selectionner une relation</option>-->
                                 <!-- Boucle pour afficher les contacts -->
                                 <option th:each="contact : ${contacts}" th:value="${contact.id}" th:text="${contact.username}">
                                     Selectionner une relation
@@ -80,11 +106,19 @@
                         </td>
                         <td>
                             <!-- Champ pour la description -->
-                            <input maxlength="250" style="width: 300px;" id="description" name="description" type="text" placeholder="Description" required>
+                            <label for="description">
+                               Description
+                            </label>
+                            <input maxlength="250" style="width: 300px;" id="description" name="description" type="text"
+                                   placeholder="Entrer une description" required>
                         </td>
                         <td  >
                             <!-- Champ pour le montant -->
-                            <input max="9999999" style="width: 70px;" id="montant" name="montant" type="number" step="0.01" placeholder="0.00 €" required>
+                            <label for="montant">
+                                Montant
+                            </label>
+                            <input max="9999999" style="width: 70px;" id="montant" name="montant" type="number" step="0.01"
+                                   placeholder="0.00 €" required>
                         </td>
                         <td><!-- Bouton pour soumettre le formulaire -->
                             <button class="btn btn-login" type="submit">Payer</button>

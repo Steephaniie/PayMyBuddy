@@ -20,6 +20,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+
+/**
+ * Classe de test pour le contrôleur TransfererController.
+ * Cette classe vérifie les fonctionnalités liées à la visualisation des transactions
+ * et à la création de paiements.
+ */
 @SpringBootTest
 class TransfererControllerTest {
     @MockBean
@@ -31,6 +37,11 @@ class TransfererControllerTest {
     @Autowired
     private TransfererController transfererController;
 
+    /**
+     * Configuration initiale exécutée avant chaque test.
+     * Cette méthode initialise les mocks pour les services et le modèle,
+     * et instancie le contrôleur avec les dépendances simulées.
+     */
     @BeforeEach
     void setUp() {
         transactionService = Mockito.mock(TransactionService.class);
@@ -40,6 +51,11 @@ class TransfererControllerTest {
         transfererController = new TransfererController(transactionService, userService);
     }
 
+    /**
+     * Test de la méthode viewTransactionsBySender() du contrôleur.
+     * Vérifie qu'une vue correcte est retournée lorsque les transactions
+     * sont récupérées avec succès pour un utilisateur donné.
+     */
     @Test
     void testViewTransactionsBySender_Success() {
         // Arrange
@@ -63,6 +79,11 @@ class TransfererControllerTest {
         verify(model).addAttribute("username", userConnecte.getUsername());
     }
 
+    /**
+     * Test de la méthode viewTransactionsBySender() lorsqu'une exception est levée.
+     * Vérifie qu'en cas d'erreur lors de la récupération des transactions,
+     * la vue "error" est retournée et aucun attribut n'est ajouté au modèle.
+     */
     @Test
     void testViewTransactionsBySender_Exception() {
         // Arrange
@@ -80,6 +101,10 @@ class TransfererControllerTest {
         verify(model, never()).addAttribute(anyString(), any());
     }
 
+    /**
+     * Test de la méthode payer() du contrôleur.
+     * Vérifie qu'une transaction est créée avec succès et que la vue correcte est retournée.
+     */
     @Test
     void testPayer_Success() {
         // Arrange

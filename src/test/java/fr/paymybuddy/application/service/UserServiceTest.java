@@ -222,6 +222,11 @@ class UserServiceTest {
         assertEquals("contact2", userDTOList.get(1).getUsername());
     }
 
+    /**
+     * Teste la méthode {@link UserService#addContactByEmail(User, String)}.
+     * Scénario : ajout réussi d'un nouveau contact à l'utilisateur courant.
+     * Vérifie que le contact est bien ajouté et que les informations du UserDTO sont correctes.
+     */
     @Test
     void testAddContactByEmail() {
         // Préparation des mocks
@@ -253,7 +258,11 @@ class UserServiceTest {
     }
 
 
-
+    /**
+     * Teste la méthode {@link UserService#addContactByEmail(User, String)}.
+     * Scénario : tentative d'ajout d'un contact qui n'existe pas dans la base de données.
+     * Vérifie que le contact n'est pas ajouté et que la méthode retourne null.
+     */
     @Test
     void testAddContactByEmail_UserNotFound() {
         // Préparation des mocks
@@ -273,6 +282,11 @@ class UserServiceTest {
         verify(userRepository, never()).save(any(User.class));
     }
 
+    /**
+     * Teste la méthode {@link UserService#addContactByEmail(User, String)}.
+     * Scénario : tentative d'ajout d'un contact qui est déjà présent dans la liste de connexions.
+     * Vérifie que le contact n'est pas ajouté une nouvelle fois et que ses informations UserDTO sont correctes.
+     */
     @Test
     void testAddContactByEmail_UserAlreadyInConnections() {
         // Préparation des mocks

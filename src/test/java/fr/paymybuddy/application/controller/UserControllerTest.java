@@ -164,17 +164,23 @@ class UserControllerTest {
                 .andExpect(view().name("Contact")); // Vérifie que la vue retournée est "contact"
     }
 
+    /**
+     * Teste l'ajout réussi d'un contact via un email avec la méthode POST.
+     * Vérifie que le contact est ajouté et que la vue "Contact" est retournée.
+     *
+     * @throws Exception si une erreur survient pendant l'exécution du test.
+     */
     @Test
     void testAddContactSuccess() throws Exception {
 
         String contactUsername = "updatedUser";
         String contactEmail = "updated@example.com";
 
-        UserDTO userDto = new UserDTO(contactUsername,contactEmail,2L);
+        UserDTO userDto = new UserDTO(contactUsername, contactEmail, 2L);
         when(userService.addContactByEmail(authenticatedUser, contactEmail))
                 .thenReturn(userDto);
         // Appeler la méthode testée
-         String a = userController.addContact(authenticatedUser, contactEmail,model);
+        String a = userController.addContact(authenticatedUser, contactEmail, model);
         assertEquals("Contact", a);
         verify(userService, times(1)).addContactByEmail(authenticatedUser, contactEmail);
     }

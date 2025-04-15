@@ -17,8 +17,8 @@
         }
         .btn {
             display: block; /* Affichage en bloc */
-            width: 100px; /* Largeur fixe pour uniformiser */
-            margin: 10px; /* Marge automatique pour centrer */
+            width: 140px; /* Largeur fixe pour uniformiser */
+            margin: 10px auto; /* Marge automatique pour centrer */
             padding: 10px; /* Espacement interne */
             font-size: 16px; /* Taille de la police */
             border: none; /* Suppression de la bordure par défaut */
@@ -29,8 +29,19 @@
         }
 
         /* Style spécifique au bouton de connexion */
+        /* Style spécifique au bouton de connexion */
         .btn-login {
-            background-color: #4CAF50; /* Couleur verte pour Connexion */
+            display: block; /* Affichage en bloc pour uniformiser */
+            width: 150px; /* Largeur fixe pour uniformiser */
+            margin: 10px ; /* Centrer horizontalement */
+            padding: 10px; /* Espacement interne */
+            font-size: 18px; /* Taille de la police compatible large */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Supprime le soulignement */
+            color: white; /* Couleur du texte */
+            background-color: #1558b0; /* Bleu foncé pour un meilleur contraste */
         }
 
         th, td {
@@ -41,13 +52,26 @@
         th {
             background-color: #f4f4f4;
         }
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 <table style="width: 930px;margin-left: 20px;">
     <tr>
-        <td style="width: 500px;">
-            <h3> Pay My Buddy</h3>
+        <td style="width: 450px;" >
+            <h3 th:title="${solde}">Pay My Buddy</h3>
         </td>
         <td>
             <a th:href="@{/transferer}">Transférer</a><br>
@@ -55,8 +79,8 @@
         <td>
             <a th:href="@{/profil}">Profil</a><br>
         </td>
-        <td>
-            <a th:href="@{/contact}">Ajouter relation</a><br>
+        <td style="width: 117px">
+            <a th:href="@{/contact}" >Ajouter relation</a><br>
         </td>
         <td>
             <a th:href="@{/logout}">Se déconnecter</a><br>
@@ -70,7 +94,8 @@
                     <tr>
                         <td style="width: 250px;">
                             <label for="email">Chercher une relation</label> <!-- Champ de saisie pour l'adresse e-mail -->
-                            <input maxlength="250" style="width: 300px" type="email" id="email" name="email" placeholder="Saisir une adresse mail" required>
+                            <input maxlength="250" style="width: 300px" type="email" id="email" name="email"
+                                   placeholder="Entrer un e-mail" required>
                             <div th:if="${error}" class="error" th:text="${error}"></div>
                             <div th:if="${succes}" class="error" th:text="${succes}"></div>
                         </td>

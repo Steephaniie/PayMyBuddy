@@ -13,7 +13,8 @@ PayMyBuddy est une application web de transferts d'argents qui permet aux utilis
 ## Technologies
 - Java 21 : Langage de programmation.
 - Spring Boot : Framework Java pour créer des applications web.
-- MySQL : Systeme de gestion de base de données relationnelle.
+- Sprint Security : Framework Java pour la sécurité 
+- MySQL : Système de gestion de base de données relationnelle.
 - Marven : Outil de build automatisé.
 - Thymeleaf : Moteur de template pour la génération de pages HTML.
 - JUnit 5 et Mockito : pour les tests
@@ -40,3 +41,15 @@ PayMyBuddy est une application web de transferts d'argents qui permet aux utilis
 
 ## Structure de la base de données
 ![img_2.png](img_2.png)
+
+## Accessibilité 
+1-Accessibilité : Cette application a été développé en suivant les recommandations des WCAG 2.2 (niveau AA), afin de garantir une expérience utilisateur inclusive pour tous les publics, y compris les personnes en situation de handicap. 
+
+2- Principes respectés : 
+- **Perceptibilité** : Textes alternatifs pour les images, contrastes suffisants, hiérarchie des titres.
+- **Utilisabilité** : Navigation accessible au clavier, focus visible, intéractions cohérentes.
+- **Compréhensibilité** : Libellés explicites pour les champs, messages d'erreurs compréhensibles.
+- **Robustesse** : Code HTML/CSS conforme, sémantique, compatibilité avec les lecteurs d'écran. 
+
+Des tests ont été réalisés avec WAVE pour valider l'accessibilité de l'interface. Le développement respecte également les bonnes pratiques d'ergonomie et de navigabilité pour améliorer l'expérience utilisateur. 
+L'objectif est de rendre cette application conforme aux bonnes pratiques de design inclusif dès la phase de prototype. 

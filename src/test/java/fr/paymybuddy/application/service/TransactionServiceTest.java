@@ -38,17 +38,23 @@ class TransactionServiceTest {
     private TransactionService transactionService;
 
     /**
-     * Méthode exécutée avant chaque test pour initialiser les mocks.
-     * Elle utilise Mockito pour ouvrir les mocks et injecter automatiquement les dépendances simulées.
+     * Méthode exécutée avant chaque test pour initialiser les mocks nécessaires au bon déroulement des tests.
+     * Elle utilise Mockito pour ouvrir les mocks des dépendances utilisées dans la classe testée.
+     * Cela permet d'éviter les dépendances réelles et de simuler le comportement attendu.
      */
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
     }
 
+    /**
+     * Teste le scénario dans lequel une liste de transactions est recherchée avec succès
+     * pour un utilisateur spécifique (l'émetteur).
+     * Vérifie que les données retournées correspondent aux attentes.
+     */
     @Test
     void testFindTransactionsBySender_Success() {
-        // Arrange : Préparer les données nécessaires au test
+        // Arrange : Préparer les données nécessaires au test en créant un émetteur, un destinataire et une transaction simulée
         User sender = new User();
         sender.setId(1L);
         sender.setUsername("testUser");
@@ -62,15 +68,22 @@ class TransactionServiceTest {
         transaction1.setAmount(new BigDecimal("100.0"));
         when(transactionRepository.findBySender_Id(sender.getId())).thenReturn(List.of(transaction1));
 
-        // Act : Exécuter la méthode testée
+        // Act : Appeler la méthode pour rechercher les transactions
         List<TransactionDTO> transactions = transactionService.findTransactionsBySender(sender.getId());
 
-        // Assert : Vérifier les résultats et s'assurer qu'ils correspondent aux attentes
+        // Assert : Vérifier que les résultats retournés ne sont pas nuls, qu'une seule transaction est obtenue,
+        // et que la méthode du repository est appelée une fois
         assertNotNull(transactions);
         assertEquals(1, transactions.size());
         verify(transactionRepository, times(1)).findBySender_Id(sender.getId());
     }
 
+    /**
+     * Teste le scénario où aucun résultat n'est trouvé pour un utilisateur
+     * lors de la recherche de transactions comme émetteur.
+     * Prépare un identifiant inexistant et vérifie que la liste retournée est vide.
+     * Valide ensuite que le repository est appelé exactement une fois.
+     */
     @Test
     void testFindTransactionsBySender_NoTransactions() {
         // Arrange
@@ -86,6 +99,12 @@ class TransactionServiceTest {
         verify(transactionRepository, times(1)).findBySender_Id(senderId);
     }
 
+    /**
+     * Teste la réussite de la création d'une transaction entre deux utilisateurs
+     * avec des soldes valides. Prépare un émetteur et un destinataire avec des
+     * données cohérentes et vérifie que les interactions nécessaires sont effectuées
+     * correctement et que la transaction est marquée comme réussie.
+     */
     @Test
     void testCreateTransaction_Success() {
         // Arrange : Préparer les données nécessaires au test
@@ -116,6 +135,14 @@ class TransactionServiceTest {
         verify(userService, times(1)).getById(receiverId);
         verify(transactionRepository, times(1)).save(any(Transaction.class));
     }
+
+    /**
+     * Teste la récupération des transactions pour un utilisateur, à la fois
+     * celles qu'il a envoyées et celles qu'il a reçues. Prépare des données
+     * simulant une transaction envoyée et une reçue, vérifie que les
+     * informations sont correctement formatées dans les DTO retournés, et
+     * valide que les interactions avec le repository ont bien lieu.
+     */
     @Test
     void testFindMesTransactions_Success() {
         // Préparer les données de test

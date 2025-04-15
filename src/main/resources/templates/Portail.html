@@ -34,7 +34,7 @@
         /* Style générique pour les boutons */
         .btn {
             display: block; /* Affichage en bloc */
-            width: 200px; /* Largeur fixe pour uniformiser */
+            width: 140px; /* Largeur fixe pour uniformiser */
             margin: 10px auto; /* Marge automatique pour centrer */
             padding: 10px; /* Espacement interne */
             font-size: 16px; /* Taille de la police */
@@ -45,9 +45,33 @@
             color: white; /* Couleur du texte */
         }
 
+        .logo {
+            display: block; /* Affichage en bloc */
+            width: 250px; /* Largeur fixe pour uniformiser */
+            margin: 10px auto; /* Marge automatique pour centrer */
+            padding: 10px; /* Espacement interne */
+            font-size: 30px; /* Taille de la police */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Suppression du soulignement */
+            color: white; /* Couleur du texte */
+            background-color: #b35500; /* Orange foncé pour meilleur contraste */
+        }
+
         /* Style spécifique au bouton de connexion */
         .btn-login {
-            background-color: #4CAF50; /* Couleur verte pour Connexion */
+            display: block; /* Affichage en bloc pour uniformiser */
+            width: 150px; /* Largeur fixe pour uniformiser */
+            margin: 10px auto; /* Centrer horizontalement */
+            padding: 10px; /* Espacement interne */
+            font-size: 18px; /* Taille de la police compatible large */
+            border: none; /* Suppression de la bordure par défaut */
+            border-radius: 5px; /* Coins arrondis */
+            cursor: pointer; /* Modifie le curseur au survol */
+            text-decoration: none; /* Supprime le soulignement */
+            color: white; /* Couleur du texte */
+            background-color: #1558b0; /* Bleu foncé pour un meilleur contraste */
         }
 
         /* Style spécifique au bouton d'enregistrement */
@@ -59,6 +83,20 @@
         .btn:hover {
             opacity: 0.9; /* Légère transparence pour effet visuel */
         }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 18px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        label {
+            font-size: 16px;
+            color: #333;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -69,7 +107,7 @@
     <!-- Bouton redirigeant vers la page de connexion -->
     <a href="/login" class="btn btn-login">Se connecter</a>
     <!-- Bouton redirigeant vers la page d'enregistrement -->
-    <a href="/register" class="btn btn-register">S'enregistrer</a>
+    <a href="/register" class="btn btn-login">S'enregistrer</a>
 </div>
 </body>
 </html>

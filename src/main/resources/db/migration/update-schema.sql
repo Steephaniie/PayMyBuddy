@@ -1,3 +1,7 @@
+DROP TABLE users_connections;
+DROP TABLE transactions;
+DROP TABLE users;
+
 -- Création de la table des transactions qui contient les détails des transferts effectués entre les utilisateurs
 CREATE TABLE transactions
 (
@@ -46,3 +50,8 @@ ALTER TABLE users_connections
 -- Ajout d'une contrainte de clé étrangère dans 'users_connections' pour relier 'user_id' au champ 'id' dans 'users'
 ALTER TABLE users_connections
     ADD CONSTRAINT fk_usecon_on_user FOREIGN KEY (user_id) REFERENCES users (id);
+
+-- ajout user toto mot de passe = "s"
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `solde`) VALUES (1, 'toto', '$2a$10$jZxg/JoHtYxHtqZY5nS26.T/zNmZAYGlnNZWRUpuWTQWM8mHLuWZm', 'toto@toto.fr', 100.00);
+-- ajout user tata mot de passe = "s"
+INSERT INTO `users` (`id`, `username`, `password`, `email`, `solde`) VALUES (2, 'tata', '$2a$10$Z4kPq6LxwAYSSmLkT6Gt0.z8F.VQIWkyzpCrmmFWTbYHfIJ70Uuj6', 'tata@tata.fr', 100.00);
