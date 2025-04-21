@@ -134,11 +134,13 @@ public class TransactionService {
             }
 
             // Soustraire du solde de l'expéditeur et sauvegarder
-            userConecte.setSolde(userConecte.getSolde().subtract(amount));
+            BigDecimal newSolde = userConecte.getSolde().subtract(amount);
+            userConecte.setSolde(newSolde);
             userRepository.save(userConecte);
 
             // Ajouter au solde du destinataire et sauvegarder
-            userDestinataire.setSolde(userDestinataire.getSolde().add(amount));
+            BigDecimal newSoldeDestinataire = userDestinataire.getSolde().add(amount);
+            userDestinataire.setSolde(newSoldeDestinataire);
             userRepository.save(userDestinataire);
 
             // Sauvegarder la transaction
